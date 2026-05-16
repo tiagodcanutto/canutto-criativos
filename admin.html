@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Canutto Dev — Painel Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #0a0c10;
+    --surface: #13161c;
+    --surface2: #1c2029;
+    --border: rgba(255,255,255,0.07);
+    --border2: rgba(255,255,255,0.13);
+    --text: #e8eaf0;
+    --text2: #8b91a0;
+    --text3: #555c6e;
+    --accent: #4f8ef7;
+    --accent2: #2563eb;
+    --green: #22c55e;
+    --green-bg: rgba(34,197,94,0.12);
+    --yellow: #f59e0b;
+    --yellow-bg: rgba(245,158,11,0.12);
+    --red: #ef4444;
+    --red-bg: rgba(239,68,68,0.12);
+    --blue-bg: rgba(79,142,247,0.12);
+    --radius: 10px;
+    --radius-sm: 6px;
+  }
+  body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+  /* LAYOUT */
+  .shell { display: flex; min-height: 100vh; }
+  .sidebar { width: 220px; background: var(--surface); border-right: 1px solid var(--border); display: flex; flex-direction: column; padding: 24px 0; position: fixed; top: 0; left: 0; height: 100vh; z-index: 10; }
+  .main { margin-left: 220px; flex: 1; padding: 32px; max-width: 1100px; }
+
+  .logo { padding: 0 20px 24px; border-bottom: 1px solid var(--border); margin-bottom: 8px; }
+  .logo-name { font-size: 15px; font-weight: 600; color: var(--text); letter-spacing: -0.3px; }
+  .logo-tag { font-size: 11px; color: var(--text3); font-family: 'DM Mono', monospace; margin-top: 2px; }
+
+  .nav-item { display: flex; align-items: center; gap: 10px; padding: 9px 20px; font-size: 13px; color: var(--text2); cursor: pointer; border-left: 2px solid transparent; transition: all 0.15s; }
+  .nav-item:hover { color: var(--text); background: rgba(255,255,255,0.03); }
+  .nav-item.active { color: var(--accent); border-left-color: var(--accent); background: var(--blue-bg); }
+  .nav-icon { font-size: 16px; width: 18px; text-align: center; }
+
+  .nav-section { padding: 16px 20px 4px; font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text3); }
+
+  /* CONFIG BADGE */
+  .config-needed { background: var(--yellow-bg); border: 1px solid rgba(245,158,11,0.3); border-radius: var(--radius-sm); padding: 10px 14px; margin: 20px; font-size: 12px; color: var(--yellow); line-height: 1.5; }
+  .config-needed strong { display: block; margin-bottom: 4px; font-weight: 600; }
+
+  /* TOPBAR */
+  .topbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 28px; }
+  .page-title { font-size: 20px; font-weight: 600; letter-spacing: -0.4px; }
+  .btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: var(--radius-sm); font-size: 13px; font-family: 'DM Sans', sans-serif; cursor: pointer; border: none; transition: all 0.15s; font-weight: 500; }
+  .btn-primary { background: var(--accent); color: #fff; }
+  .btn-primary:hover { background: var(--accent2); }
+  .btn-ghost { background: var(--surface2); color: var(--text2); border: 1px solid var(--border2); }
+  .btn-ghost:hover { color: var(--text); border-color: var(--border2); background: var(--surface); }
+  .btn-danger { background: var(--red-bg); color: var(--red); border: 1px solid rgba(239,68,68,0.25); }
+  .btn-danger:hover { background: rgba(239,68,68,0.25); }
+  .btn-sm { padding: 5px 10px; font-size: 12px; }
+  .btn-icon { padding: 6px; border-radius: var(--radius-sm); }
+
+  /* STATS */
+  .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 28px; }
+  .stat { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px 20px; }
+  .stat-label { font-size: 11px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px; }
+  .stat-val { font-size: 26px; font-weight: 600; letter-spacing: -1px; color: var(--text); }
+  .stat-sub { font-size: 11px; color: var(--text3); margin-top: 4px; }
+
+  /* VIEWS */
+  .view { display: none; }
+  .view.active { display: block; }
+
+  /* CARDS */
+  .card-list { display: flex; flex-direction: column; gap: 8px; }
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 18px; display: flex; align-items: center; gap: 14px; transition: border-color 0.15s; }
+  .card:hover { border-color: var(--border2); }
+  .card-icon { width: 42px; height: 42px; border-radius: var(--radius-sm); background: var(--surface2); display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+  .card-info { flex: 1; min-width: 0; }
+  .card-name { font-size: 14px; font-weight: 500; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .card-meta { font-size: 12px; color: var(--text2); margin-top: 3px; }
+  .card-right { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+
+  /* BADGES */
+  .badge { display: inline-flex; align-items: center; gap: 4px; padding: 3px 9px; border-radius: 20px; font-size: 11px; font-weight: 500; }
+  .badge-green { background: var(--green-bg); color: var(--green); }
+  .badge-yellow { background: var(--yellow-bg); color: var(--yellow); }
+  .badge-red { background: var(--red-bg); color: var(--red); }
+  .badge-blue { background: var(--blue-bg); color: var(--accent); }
+
+  /* SEARCH / FILTER */
+  .filter-bar { display: flex; gap: 10px; margin-bottom: 16px; }
+  .filter-bar input, .filter-bar select { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 8px 12px; font-size: 13px; color: var(--text); font-family: 'DM Sans', sans-serif; }
+  .filter-bar input { flex: 1; }
+  .filter-bar input::placeholder { color: var(--text3); }
+  .filter-bar select option { background: var(--surface); }
+  .filter-bar input:focus, .filter-bar select:focus { outline: none; border-color: var(--accent); }
+
+  /* MODAL */
+  .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 100; align-items: center; justify-content: center; backdrop-filter: blur(4px); }
+  .overlay.open { display: flex; }
+  .modal { background: var(--surface); border: 1px solid var(--border2); border-radius: 14px; padding: 24px; width: 460px; max-width: 95vw; max-height: 90vh; overflow-y: auto; }
+  .modal-title { font-size: 16px; font-weight: 600; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; }
+  .field { margin-bottom: 14px; }
+  .field label { display: block; font-size: 12px; color: var(--text2); margin-bottom: 5px; font-weight: 500; }
+  .field input, .field select, .field textarea { width: 100%; background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 9px 12px; font-size: 13px; color: var(--text); font-family: 'DM Sans', sans-serif; transition: border-color 0.15s; }
+  .field input:focus, .field select:focus, .field textarea:focus { outline: none; border-color: var(--accent); }
+  .field input::placeholder, .field textarea::placeholder { color: var(--text3); }
+  .field select option { background: var(--surface2); }
+  .field textarea { resize: vertical; min-height: 70px; }
+  .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .modal-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 20px; border-top: 1px solid var(--border); padding-top: 16px; }
+
+  /* LINK BOX */
+  .link-box { background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 10px 14px; font-family: 'DM Mono', monospace; font-size: 12px; color: var(--accent); display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 8px; }
+  .link-box span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1; }
+
+  /* EMPTY STATE */
+  .empty { text-align: center; padding: 48px; color: var(--text3); }
+  .empty-icon { font-size: 36px; margin-bottom: 10px; opacity: 0.4; }
+  .empty p { font-size: 13px; }
+
+  /* CLIENT TABLE PREVIEW */
+  .clients-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 12px; }
+  .client-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 18px; cursor: pointer; transition: border-color 0.15s; }
+  .client-card:hover { border-color: var(--accent); }
+  .client-avatar { width: 44px; height: 44px; border-radius: 50%; background: var(--blue-bg); display: flex; align-items: center; justify-content: center; font-size: 22px; margin-bottom: 10px; }
+  .client-card-name { font-size: 14px; font-weight: 600; margin-bottom: 2px; }
+  .client-card-meta { font-size: 12px; color: var(--text2); }
+  .client-card-stats { display: flex; gap: 10px; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border); }
+  .client-stat { font-size: 11px; color: var(--text3); }
+  .client-stat strong { display: block; font-size: 13px; color: var(--text); font-weight: 500; }
+
+  /* SETUP SCREEN */
+  .setup-screen { max-width: 560px; margin: 60px auto; }
+  .setup-card { background: var(--surface); border: 1px solid var(--border2); border-radius: 16px; padding: 32px; }
+  .setup-title { font-size: 22px; font-weight: 600; margin-bottom: 6px; letter-spacing: -0.5px; }
+  .setup-sub { font-size: 13px; color: var(--text2); margin-bottom: 24px; line-height: 1.6; }
+  .setup-steps { margin-bottom: 24px; }
+  .setup-step { display: flex; gap: 12px; align-items: flex-start; padding: 10px 0; border-bottom: 1px solid var(--border); }
+  .setup-step:last-child { border-bottom: none; }
+  .step-num { width: 22px; height: 22px; border-radius: 50%; background: var(--blue-bg); color: var(--accent); font-size: 11px; font-weight: 600; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+  .step-text { font-size: 13px; color: var(--text2); line-height: 1.5; }
+  .step-text strong { color: var(--text); }
+  .step-text a { color: var(--accent); text-decoration: none; }
+  .step-text a:hover { text-decoration: underline; }
+  .step-code { background: var(--surface2); border-radius: var(--radius-sm); padding: 8px 12px; font-family: 'DM Mono', monospace; font-size: 11px; color: var(--accent); margin-top: 6px; overflow-x: auto; white-space: pre; }
+
+  /* TOAST */
+  .toast { position: fixed; bottom: 24px; right: 24px; background: var(--surface2); border: 1px solid var(--border2); border-radius: var(--radius); padding: 12px 18px; font-size: 13px; color: var(--text); z-index: 999; transform: translateY(80px); opacity: 0; transition: all 0.3s cubic-bezier(0.34,1.56,0.64,1); pointer-events: none; }
+  .toast.show { transform: translateY(0); opacity: 1; }
+  .toast.success { border-color: rgba(34,197,94,0.4); color: var(--green); }
+  .toast.error { border-color: rgba(239,68,68,0.4); color: var(--red); }
+
+  /* CONFIRM DIALOG */
+  .confirm-box { background: var(--surface); border: 1px solid var(--border2); border-radius: 12px; padding: 22px; width: 340px; text-align: center; }
+  .confirm-title { font-size: 15px; font-weight: 600; margin-bottom: 8px; }
+  .confirm-msg { font-size: 13px; color: var(--text2); margin-bottom: 20px; }
+  .confirm-btns { display: flex; gap: 8px; justify-content: center; }
+
+  /* SCROLLBAR */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<!-- ===== SETUP SCREEN (shown when Firebase not configured) ===== -->
+<div id="setup-screen" style="display:none; padding:20px;">
+  <div class="setup-screen">
+    <div class="setup-card">
+      <div class="setup-title">⚡ Configurar Firebase</div>
+      <div class="setup-sub">Para que o sistema funcione com links em tempo real, você precisa de um banco de dados gratuito do Firebase. Leva menos de 5 minutos.</div>
+      <div class="setup-steps">
+        <div class="setup-step"><div class="step-num">1</div><div class="step-text">Acesse <a href="https://console.firebase.google.com" target="_blank">console.firebase.google.com</a> e crie um projeto (qualquer nome, ex: <strong>canutto-criativos</strong>)</div></div>
+        <div class="setup-step"><div class="step-num">2</div><div class="step-text">No menu lateral, clique em <strong>Build → Realtime Database</strong> → <em>Create Database</em> → escolha uma região → selecione <strong>Start in test mode</strong> → Enable</div></div>
+        <div class="setup-step"><div class="step-num">3</div><div class="step-text">Clique na engrenagem ⚙️ → <strong>Project Settings</strong> → role até "Your apps" → clique em <strong>&lt;/&gt;</strong> (Web) → registre o app → copie o objeto <code>firebaseConfig</code></div></div>
+        <div class="setup-step"><div class="step-num">4</div><div class="step-text">Cole a configuração abaixo e clique em Salvar:</div></div>
+      </div>
+      <div class="field"><label>firebaseConfig (cole o objeto JSON aqui)</label><textarea id="config-input" style="min-height:140px; font-family: 'DM Mono', monospace; font-size:12px;" placeholder='{&#10;  "apiKey": "AIza...",&#10;  "authDomain": "seu-projeto.firebaseapp.com",&#10;  "databaseURL": "https://seu-projeto-default-rtdb.firebaseio.com",&#10;  "projectId": "seu-projeto",&#10;  "storageBucket": "...",&#10;  "messagingSenderId": "...",&#10;  "appId": "..."&#10;}'></textarea></div>
+      <div class="field"><label>Senha do painel admin</label><input type="password" id="admin-pass-input" placeholder="Crie uma senha para proteger o painel" /></div>
+      <button class="btn btn-primary" style="width:100%" onclick="saveConfig()">✓ Salvar configuração e entrar</button>
+      <div id="config-error" style="margin-top:10px;font-size:12px;color:var(--red);display:none;"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== LOGIN SCREEN ===== -->
+<div id="login-screen" style="display:none; padding:20px;">
+  <div class="setup-screen">
+    <div class="setup-card">
+      <div class="setup-title">🔒 Painel Admin</div>
+      <div class="setup-sub">Canutto Dev — sistema de criativos e pagamentos</div>
+      <div class="field"><label>Senha</label><input type="password" id="login-pass" placeholder="Sua senha de admin" onkeydown="if(event.key==='Enter')doLogin()" /></div>
+      <button class="btn btn-primary" style="width:100%;margin-top:4px" onclick="doLogin()">Entrar</button>
+      <div id="login-error" style="margin-top:10px;font-size:12px;color:var(--red);display:none;"></div>
+      <button class="btn btn-ghost btn-sm" style="margin-top:14px;width:100%" onclick="clearConfig()">↺ Reconfigurar Firebase</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MAIN APP ===== -->
+<div id="app" style="display:none;">
+  <div class="shell">
+    <!-- SIDEBAR -->
+    <nav class="sidebar">
+      <div class="logo">
+        <div class="logo-name">Canutto Dev</div>
+        <div class="logo-tag">admin panel</div>
+      </div>
+      <div class="nav-section">Menu</div>
+      <div class="nav-item active" onclick="switchNav('dashboard', this)">
+        <span class="nav-icon">📊</span> Painel
+      </div>
+      <div class="nav-item" onclick="switchNav('clientes', this)">
+        <span class="nav-icon">👥</span> Clientes
+      </div>
+      <div class="nav-item" onclick="switchNav('criativos', this)">
+        <span class="nav-icon">🎨</span> Criativos
+      </div>
+      <div class="nav-item" onclick="switchNav('pagamentos', this)">
+        <span class="nav-icon">💳</span> Pagamentos
+      </div>
+      <div class="nav-section" style="margin-top:auto">Conta</div>
+      <div class="nav-item" onclick="logout()">
+        <span class="nav-icon">🚪</span> Sair
+      </div>
+    </nav>
+
+    <!-- MAIN -->
+    <main class="main">
+
+      <!-- DASHBOARD -->
+      <div class="view active" id="view-dashboard">
+        <div class="topbar">
+          <div class="page-title">Painel</div>
+          <span id="sync-indicator" style="font-size:12px;color:var(--text3);">⬤ conectado</span>
+        </div>
+        <div class="stats">
+          <div class="stat"><div class="stat-label">Criativos</div><div class="stat-val" id="s-criativos">0</div><div class="stat-sub">no sistema</div></div>
+          <div class="stat"><div class="stat-label">A receber</div><div class="stat-val" id="s-receber">R$ 0</div><div class="stat-sub">pendente</div></div>
+          <div class="stat"><div class="stat-label">Recebido</div><div class="stat-val" id="s-recebido">R$ 0</div><div class="stat-sub">confirmado</div></div>
+          <div class="stat"><div class="stat-label">Clientes</div><div class="stat-val" id="s-clientes">0</div><div class="stat-sub">ativos</div></div>
+        </div>
+        <div style="font-size:13px;font-weight:500;color:var(--text2);margin-bottom:12px">Atividade recente</div>
+        <div class="card-list" id="dash-recent"></div>
+      </div>
+
+      <!-- CLIENTES -->
+      <div class="view" id="view-clientes">
+        <div class="topbar">
+          <div class="page-title">Clientes</div>
+          <button class="btn btn-primary" onclick="openModal('modal-cliente')">+ Novo cliente</button>
+        </div>
+        <div class="clients-grid" id="lista-clientes"></div>
+      </div>
+
+      <!-- CRIATIVOS -->
+      <div class="view" id="view-criativos">
+        <div class="topbar">
+          <div class="page-title">Criativos</div>
+          <button class="btn btn-primary" onclick="openModal('modal-criativo')">+ Novo criativo</button>
+        </div>
+        <div class="filter-bar">
+          <input type="text" id="busca-c" placeholder="Buscar..." oninput="renderCriativos()" />
+          <select id="filtro-cliente-c" onchange="renderCriativos()"><option value="">Todos os clientes</option></select>
+          <select id="filtro-status-c" onchange="renderCriativos()">
+            <option value="">Todos os status</option>
+            <option value="em andamento">Em andamento</option>
+            <option value="revisão">Revisão</option>
+            <option value="entregue">Entregue</option>
+          </select>
+        </div>
+        <div class="card-list" id="lista-criativos"></div>
+      </div>
+
+      <!-- PAGAMENTOS -->
+      <div class="view" id="view-pagamentos">
+        <div class="topbar">
+          <div class="page-title">Pagamentos</div>
+          <button class="btn btn-primary" onclick="openModal('modal-pagamento')">+ Novo lançamento</button>
+        </div>
+        <div class="filter-bar">
+          <input type="text" id="busca-p" placeholder="Buscar..." oninput="renderPagamentos()" />
+          <select id="filtro-cliente-p" onchange="renderPagamentos()"><option value="">Todos os clientes</option></select>
+          <select id="filtro-status-p" onchange="renderPagamentos()">
+            <option value="">Todos</option>
+            <option value="pago">Pago</option>
+            <option value="pendente">Pendente</option>
+            <option value="atrasado">Atrasado</option>
+          </select>
+        </div>
+        <div class="card-list" id="lista-pagamentos"></div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<!-- MODAIS -->
+
+<!-- Modal Cliente -->
+<div class="overlay" id="modal-cliente">
+  <div class="modal">
+    <div class="modal-title">Novo cliente <button class="btn btn-ghost btn-sm btn-icon" onclick="closeModal('modal-cliente')">✕</button></div>
+    <div class="field"><label>Nome / Empresa *</label><input type="text" id="cl-nome" placeholder="Loja Sorkie" /></div>
+    <div class="field-row">
+      <div class="field"><label>E-mail</label><input type="email" id="cl-email" placeholder="contato@sorkie.com" /></div>
+      <div class="field"><label>WhatsApp</label><input type="text" id="cl-whats" placeholder="(11) 99999-9999" /></div>
+    </div>
+    <div class="field"><label>Emoji / Ícone</label><input type="text" id="cl-emoji" placeholder="🛍️" maxlength="2" style="width:80px" /></div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal('modal-cliente')">Cancelar</button>
+      <button class="btn btn-primary" onclick="salvarCliente()">✓ Salvar cliente</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Criativo -->
+<div class="overlay" id="modal-criativo">
+  <div class="modal">
+    <div class="modal-title">Novo criativo <button class="btn btn-ghost btn-sm btn-icon" onclick="closeModal('modal-criativo')">✕</button></div>
+    <div class="field"><label>Nome do arquivo *</label><input type="text" id="c-nome" placeholder="Banner_Instagram_Maio.png" /></div>
+    <div class="field-row">
+      <div class="field"><label>Cliente *</label><select id="c-cliente"><option value="">Selecione...</option></select></div>
+      <div class="field"><label>Tipo</label>
+        <select id="c-tipo">
+          <option value="🖼️ Banner">🖼️ Banner</option>
+          <option value="🎬 Vídeo">🎬 Vídeo</option>
+          <option value="📄 Post">📄 Post</option>
+          <option value="🖌️ Identidade">🖌️ Identidade</option>
+          <option value="📱 Stories">📱 Stories</option>
+          <option value="📦 Outros">📦 Outros</option>
+        </select>
+      </div>
+    </div>
+    <div class="field-row">
+      <div class="field"><label>Tamanho</label><input type="text" id="c-tamanho" placeholder="2.4 MB" /></div>
+      <div class="field"><label>Status *</label>
+        <select id="c-status">
+          <option value="em andamento">Em andamento</option>
+          <option value="revisão">Revisão</option>
+          <option value="entregue">Entregue</option>
+        </select>
+      </div>
+    </div>
+    <div class="field"><label>Link de download (Google Drive, Dropbox...)</label><input type="url" id="c-link" placeholder="https://drive.google.com/..." /></div>
+    <div class="field"><label>Observação</label><textarea id="c-obs" placeholder="Notas sobre o criativo..."></textarea></div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal('modal-criativo')">Cancelar</button>
+      <button class="btn btn-primary" onclick="salvarCriativo()">✓ Salvar criativo</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Pagamento -->
+<div class="overlay" id="modal-pagamento">
+  <div class="modal">
+    <div class="modal-title">Novo pagamento <button class="btn btn-ghost btn-sm btn-icon" onclick="closeModal('modal-pagamento')">✕</button></div>
+    <div class="field"><label>Descrição *</label><input type="text" id="p-desc" placeholder="Social media — Junho/2025" /></div>
+    <div class="field-row">
+      <div class="field"><label>Cliente *</label><select id="p-cliente"><option value="">Selecione...</option></select></div>
+      <div class="field"><label>Valor (R$) *</label><input type="number" id="p-valor" placeholder="0,00" min="0" step="0.01" /></div>
+    </div>
+    <div class="field-row">
+      <div class="field"><label>Vencimento</label><input type="date" id="p-venc" /></div>
+      <div class="field"><label>Status *</label>
+        <select id="p-status">
+          <option value="pendente">Pendente</option>
+          <option value="pago">Pago</option>
+          <option value="atrasado">Atrasado</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal('modal-pagamento')">Cancelar</button>
+      <button class="btn btn-primary" onclick="salvarPagamento()">✓ Salvar pagamento</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal link do cliente -->
+<div class="overlay" id="modal-link">
+  <div class="modal">
+    <div class="modal-title">Link do cliente <button class="btn btn-ghost btn-sm btn-icon" onclick="closeModal('modal-link')">✕</button></div>
+    <div style="font-size:13px;color:var(--text2);margin-bottom:14px;">Envie este link para o cliente. Ele vê apenas os próprios criativos e pagamentos, e o conteúdo atualiza automaticamente quando você faz alterações.</div>
+    <div class="link-box">
+      <span id="link-url-display"></span>
+      <button class="btn btn-ghost btn-sm" onclick="copyLink()">📋 Copiar</button>
+    </div>
+    <div style="margin-top:16px;font-size:12px;color:var(--text3);">⚡ Atualizações em tempo real — o cliente não precisa recarregar a página.</div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal('modal-link')">Fechar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Confirm Dialog -->
+<div class="overlay" id="modal-confirm">
+  <div class="confirm-box">
+    <div class="confirm-title" id="confirm-title">Confirmar</div>
+    <div class="confirm-msg" id="confirm-msg">Tem certeza?</div>
+    <div class="confirm-btns">
+      <button class="btn btn-ghost" onclick="closeModal('modal-confirm')">Cancelar</button>
+      <button class="btn btn-danger" id="confirm-ok-btn">Excluir</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+
+<script>
+// ===================== CONFIG =====================
+const STORAGE_KEY = 'canutto_firebase_config';
+const PASS_KEY = 'canutto_admin_pass';
+const SESSION_KEY = 'canutto_logged_in';
+
+let db = null;
+let clientes = {};
+let criativos = {};
+let pagamentos = {};
+let currentClienteLinkId = null;
+
+function getConfig() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY)); } catch { return null; }
+}
+
+function saveConfig() {
+  const raw = document.getElementById('config-input').value.trim();
+  const pass = document.getElementById('admin-pass-input').value.trim();
+  const errEl = document.getElementById('config-error');
+  errEl.style.display = 'none';
+
+  if (!pass) { errEl.textContent = 'Defina uma senha para o painel.'; errEl.style.display = 'block'; return; }
+
+  let cfg;
+  try {
+    const cleaned = raw.replace(/^const\s+\w+\s*=\s*/, '').replace(/;$/, '').trim();
+    cfg = JSON.parse(cleaned);
+  } catch {
+    errEl.textContent = 'JSON inválido. Verifique se colou corretamente o firebaseConfig.';
+    errEl.style.display = 'block';
+    return;
+  }
+
+  if (!cfg.databaseURL) { errEl.textContent = 'databaseURL não encontrado. Certifique-se de ter criado o Realtime Database no Firebase.'; errEl.style.display = 'block'; return; }
+
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(cfg));
+  localStorage.setItem(PASS_KEY, pass);
+  initFirebase(cfg);
+}
+
+function clearConfig() {
+  localStorage.removeItem(STORAGE_KEY);
+  localStorage.removeItem(SESSION_KEY);
+  location.reload();
+}
+
+function doLogin() {
+  const pass = document.getElementById('login-pass').value;
+  const stored = localStorage.getItem(PASS_KEY);
+  const errEl = document.getElementById('login-error');
+  if (pass === stored) {
+    sessionStorage.setItem(SESSION_KEY, '1');
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    initListeners();
+  } else {
+    errEl.textContent = 'Senha incorreta.';
+    errEl.style.display = 'block';
+  }
+}
+
+function logout() {
+  sessionStorage.removeItem(SESSION_KEY);
+  location.reload();
+}
+
+function initFirebase(cfg) {
+  try {
+    if (!firebase.apps.length) firebase.initializeApp(cfg);
+    db = firebase.database();
+    sessionStorage.setItem(SESSION_KEY, '1');
+    document.getElementById('setup-screen').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    initListeners();
+  } catch(e) {
+    const errEl = document.getElementById('config-error');
+    errEl.textContent = 'Erro ao conectar: ' + e.message;
+    errEl.style.display = 'block';
+  }
+}
+
+function boot() {
+  const cfg = getConfig();
+  if (!cfg) {
+    document.getElementById('setup-screen').style.display = 'block';
+    return;
+  }
+  if (!firebase.apps.length) firebase.initializeApp(cfg);
+  db = firebase.database();
+
+  if (sessionStorage.getItem(SESSION_KEY)) {
+    document.getElementById('app').style.display = 'block';
+    initListeners();
+  } else {
+    document.getElementById('login-screen').style.display = 'block';
+  }
+}
+
+function initListeners() {
+  db.ref('clientes').on('value', snap => {
+    clientes = snap.val() || {};
+    renderAll();
+  });
+  db.ref('criativos').on('value', snap => {
+    criativos = snap.val() || {};
+    renderAll();
+  });
+  db.ref('pagamentos').on('value', snap => {
+    pagamentos = snap.val() || {};
+    renderAll();
+  });
+}
+
+// ===================== UTILS =====================
+function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 7); }
+function fmt(v) { return 'R$ ' + (v||0).toFixed(2).replace('.', ','); }
+function statusBadge(s) {
+  const m = { 'entregue': 'badge-green', 'pago': 'badge-green', 'em andamento': 'badge-blue', 'revisão': 'badge-yellow', 'pendente': 'badge-yellow', 'atrasado': 'badge-red' };
+  return `<span class="badge ${m[s]||'badge-blue'}">${s}</span>`;
+}
+
+function toast(msg, type='') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast ' + type + ' show';
+  setTimeout(() => t.className = 'toast', 2800);
+}
+
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+function switchNav(id, el) {
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('view-' + id).classList.add('active');
+}
+
+// ===================== RENDER =====================
+function renderAll() {
+  renderDashboard();
+  renderClientes();
+  renderCriativos();
+  renderPagamentos();
+  populateFilters();
+}
+
+function renderDashboard() {
+  const cl = Object.values(criativos);
+  const pg = Object.values(pagamentos);
+  document.getElementById('s-criativos').textContent = cl.length;
+  document.getElementById('s-clientes').textContent = Object.keys(clientes).length;
+  const receber = pg.filter(p => p.status !== 'pago').reduce((a,p) => a + (p.valor||0), 0);
+  const recebido = pg.filter(p => p.status === 'pago').reduce((a,p) => a + (p.valor||0), 0);
+  document.getElementById('s-receber').textContent = fmt(receber);
+  document.getElementById('s-recebido').textContent = fmt(recebido);
+
+  const recent = [...cl.map(c => ({...c, _t:'criativo'})), ...pg.map(p => ({...p, _t:'pag'}))].sort((a,b) => (b.ts||0)-(a.ts||0)).slice(0, 8);
+  const el = document.getElementById('dash-recent');
+  if (!recent.length) { el.innerHTML = '<div class="empty"><div class="empty-icon">📭</div><p>Nenhum registro ainda. Comece criando um cliente.</p></div>'; return; }
+  el.innerHTML = recent.map(item => {
+    const cl_ = clientes[item.clienteId] || {};
+    if (item._t === 'criativo') {
+      return `<div class="card"><div class="card-icon">${item.tipo?item.tipo.split(' ')[0]:'🎨'}</div><div class="card-info"><div class="card-name">${item.nome}</div><div class="card-meta">${cl_.emoji||'👤'} ${cl_.nome||'?'} · ${item.data||''}</div></div><div class="card-right">${statusBadge(item.status)}</div></div>`;
+    } else {
+      return `<div class="card"><div class="card-icon" style="background:var(--blue-bg)">💳</div><div class="card-info"><div class="card-name">${item.desc}</div><div class="card-meta">${cl_.emoji||'👤'} ${cl_.nome||'?'} · ${item.venc||'sem venc.'}</div></div><div class="card-right">${statusBadge(item.status)}<span style="font-size:13px;font-weight:500;color:var(--text)">${fmt(item.valor)}</span></div></div>`;
+    }
+  }).join('');
+}
+
+function renderClientes() {
+  const el = document.getElementById('lista-clientes');
+  const list = Object.entries(clientes);
+  if (!list.length) { el.innerHTML = '<div class="empty" style="grid-column:1/-1"><div class="empty-icon">👥</div><p>Nenhum cliente cadastrado.</p></div>'; return; }
+  el.innerHTML = list.map(([id, c]) => {
+    const nc = Object.values(criativos).filter(x => x.clienteId === id).length;
+    const pgs = Object.values(pagamentos).filter(x => x.clienteId === id);
+    const total = pgs.reduce((a,p) => a+(p.valor||0), 0);
+    return `<div class="client-card">
+      <div class="client-avatar">${c.emoji||'👤'}</div>
+      <div class="client-card-name">${c.nome}</div>
+      <div class="client-card-meta">${c.email||'sem e-mail'}</div>
+      <div class="client-card-stats">
+        <div class="client-stat"><strong>${nc}</strong>criativos</div>
+        <div class="client-stat"><strong>${pgs.length}</strong>cobranças</div>
+        <div class="client-stat"><strong>${fmt(total)}</strong>total</div>
+      </div>
+      <div style="display:flex;gap:6px;margin-top:12px">
+        <button class="btn btn-ghost btn-sm" onclick="verLinkCliente('${id}')">🔗 Link do cliente</button>
+        <button class="btn btn-ghost btn-sm btn-icon" onclick="excluir('clientes','${id}','${c.nome}')">🗑</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderCriativos() {
+  const busca = (document.getElementById('busca-c')||{}).value?.toLowerCase()||'';
+  const fc = (document.getElementById('filtro-cliente-c')||{}).value||'';
+  const fs = (document.getElementById('filtro-status-c')||{}).value||'';
+  const list = Object.entries(criativos).filter(([id, c]) => {
+    const cl_ = clientes[c.clienteId]||{};
+    return (!busca || c.nome?.toLowerCase().includes(busca) || cl_.nome?.toLowerCase().includes(busca))
+      && (!fc || c.clienteId === fc)
+      && (!fs || c.status === fs);
+  }).sort((a,b) => (b[1].ts||0)-(a[1].ts||0));
+  const el = document.getElementById('lista-criativos');
+  if (!list.length) { el.innerHTML = '<div class="empty"><div class="empty-icon">🎨</div><p>Nenhum criativo encontrado.</p></div>'; return; }
+  el.innerHTML = list.map(([id, c]) => {
+    const cl_ = clientes[c.clienteId]||{};
+    return `<div class="card">
+      <div class="card-icon">${c.tipo?c.tipo.split(' ')[0]:'🎨'}</div>
+      <div class="card-info">
+        <div class="card-name">${c.nome}</div>
+        <div class="card-meta">${cl_.emoji||'👤'} ${cl_.nome||'?'} · ${c.tipo||''} · ${c.tamanho||'—'} · ${c.data||''}</div>
+      </div>
+      <div class="card-right">
+        ${statusBadge(c.status)}
+        <button class="btn btn-ghost btn-sm" onclick="toggleStatusCriativo('${id}','${c.status}')">↻</button>
+        ${c.link ? `<a href="${c.link}" target="_blank" class="btn btn-ghost btn-sm">↗ Link</a>` : ''}
+        <button class="btn btn-ghost btn-sm btn-icon" onclick="excluir('criativos','${id}','${c.nome}')">🗑</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderPagamentos() {
+  const busca = (document.getElementById('busca-p')||{}).value?.toLowerCase()||'';
+  const fc = (document.getElementById('filtro-cliente-p')||{}).value||'';
+  const fs = (document.getElementById('filtro-status-p')||{}).value||'';
+  const list = Object.entries(pagamentos).filter(([id, p]) => {
+    const cl_ = clientes[p.clienteId]||{};
+    return (!busca || p.desc?.toLowerCase().includes(busca) || cl_.nome?.toLowerCase().includes(busca))
+      && (!fc || p.clienteId === fc)
+      && (!fs || p.status === fs);
+  }).sort((a,b) => (b[1].ts||0)-(a[1].ts||0));
+  const el = document.getElementById('lista-pagamentos');
+  if (!list.length) { el.innerHTML = '<div class="empty"><div class="empty-icon">💳</div><p>Nenhum pagamento encontrado.</p></div>'; return; }
+  el.innerHTML = list.map(([id, p]) => {
+    const cl_ = clientes[p.clienteId]||{};
+    return `<div class="card">
+      <div class="card-icon" style="background:var(--blue-bg)">💳</div>
+      <div class="card-info">
+        <div class="card-name">${p.desc}</div>
+        <div class="card-meta">${cl_.emoji||'👤'} ${cl_.nome||'?'} · venc. ${p.venc||'—'}</div>
+      </div>
+      <div class="card-right">
+        ${statusBadge(p.status)}
+        <span style="font-size:14px;font-weight:500">${fmt(p.valor)}</span>
+        <button class="btn btn-ghost btn-sm" onclick="togglePago('${id}','${p.status}')">${p.status==='pago'?'↺ Desfazer':'✓ Pago'}</button>
+        <button class="btn btn-ghost btn-sm btn-icon" onclick="excluir('pagamentos','${id}','${p.desc}')">🗑</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function populateFilters() {
+  const opts = '<option value="">Todos os clientes</option>' + Object.entries(clientes).map(([id,c]) => `<option value="${id}">${c.emoji||'👤'} ${c.nome}</option>`).join('');
+  ['filtro-cliente-c','filtro-cliente-p'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) { const v = el.value; el.innerHTML = opts; el.value = v; }
+  });
+  ['c-cliente','p-cliente'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) { const v = el.value; el.innerHTML = '<option value="">Selecione...</option>' + Object.entries(clientes).map(([xid,c]) => `<option value="${xid}">${c.emoji||'👤'} ${c.nome}</option>`).join(''); el.value = v; }
+  });
+}
+
+// ===================== CRUD =====================
+function salvarCliente() {
+  const nome = document.getElementById('cl-nome').value.trim();
+  if (!nome) { toast('Informe o nome do cliente.', 'error'); return; }
+  const id = uid();
+  db.ref('clientes/' + id).set({ nome, email: document.getElementById('cl-email').value, whats: document.getElementById('cl-whats').value, emoji: document.getElementById('cl-emoji').value || '👤', ts: Date.now() });
+  closeModal('modal-cliente');
+  toast('Cliente salvo!', 'success');
+  ['cl-nome','cl-email','cl-whats','cl-emoji'].forEach(x => document.getElementById(x).value = '');
+}
+
+function salvarCriativo() {
+  const nome = document.getElementById('c-nome').value.trim();
+  const cid = document.getElementById('c-cliente').value;
+  if (!nome || !cid) { toast('Preencha nome e cliente.', 'error'); return; }
+  const id = uid();
+  db.ref('criativos/' + id).set({ nome, clienteId: cid, tipo: document.getElementById('c-tipo').value, tamanho: document.getElementById('c-tamanho').value, status: document.getElementById('c-status').value, link: document.getElementById('c-link').value, obs: document.getElementById('c-obs').value, data: new Date().toLocaleDateString('pt-BR'), ts: Date.now() });
+  closeModal('modal-criativo');
+  toast('Criativo salvo!', 'success');
+  ['c-nome','c-tamanho','c-link','c-obs'].forEach(x => document.getElementById(x).value = '');
+}
+
+function salvarPagamento() {
+  const desc = document.getElementById('p-desc').value.trim();
+  const cid = document.getElementById('p-cliente').value;
+  const valor = parseFloat(document.getElementById('p-valor').value);
+  if (!desc || !cid || !valor || valor <= 0) { toast('Preencha todos os campos obrigatórios.', 'error'); return; }
+  const id = uid();
+  db.ref('pagamentos/' + id).set({ desc, clienteId: cid, valor, venc: document.getElementById('p-venc').value, status: document.getElementById('p-status').value, ts: Date.now() });
+  closeModal('modal-pagamento');
+  toast('Pagamento salvo!', 'success');
+  ['p-desc','p-valor','p-venc'].forEach(x => document.getElementById(x).value = '');
+}
+
+function toggleStatusCriativo(id, currentStatus) {
+  const order = ['em andamento','revisão','entregue'];
+  const next = order[(order.indexOf(currentStatus)+1) % order.length];
+  db.ref('criativos/'+id+'/status').set(next);
+  toast('Status: ' + next);
+}
+
+function togglePago(id, current) {
+  const next = current === 'pago' ? 'pendente' : 'pago';
+  db.ref('pagamentos/'+id+'/status').set(next);
+  toast(next === 'pago' ? '✓ Marcado como pago!' : 'Voltou para pendente', next === 'pago' ? 'success' : '');
+}
+
+let _confirmCb = null;
+function excluir(col, id, nome) {
+  document.getElementById('confirm-msg').textContent = `Excluir "${nome}"? Esta ação não pode ser desfeita.`;
+  _confirmCb = () => { db.ref(col+'/'+id).remove(); closeModal('modal-confirm'); toast('Excluído.'); };
+  document.getElementById('confirm-ok-btn').onclick = _confirmCb;
+  openModal('modal-confirm');
+}
+
+function verLinkCliente(id) {
+  const base = location.href.replace('admin.html', 'cliente.html');
+  const url = base + '?id=' + id;
+  document.getElementById('link-url-display').textContent = url;
+  openModal('modal-link');
+}
+
+function copyLink() {
+  const url = document.getElementById('link-url-display').textContent;
+  navigator.clipboard.writeText(url).then(() => toast('Link copiado!', 'success'));
+}
+
+// Boot
+boot();
+</script>
+</body>
+</html>

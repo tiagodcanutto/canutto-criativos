@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Seus Materiais — Canutto Dev</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #f6f7f9;
+    --surface: #ffffff;
+    --surface2: #f0f2f5;
+    --border: rgba(0,0,0,0.07);
+    --border2: rgba(0,0,0,0.12);
+    --text: #111318;
+    --text2: #5a6070;
+    --text3: #9ba3b2;
+    --accent: #1d4ed8;
+    --accent-light: #eff6ff;
+    --green: #16a34a;
+    --green-bg: #f0fdf4;
+    --yellow: #d97706;
+    --yellow-bg: #fffbeb;
+    --red: #dc2626;
+    --red-bg: #fef2f2;
+    --radius: 12px;
+    --radius-sm: 8px;
+  }
+  body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+  /* HEADER */
+  .header { background: #0f172a; padding: 28px 32px; }
+  .header-inner { max-width: 760px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; }
+  .brand { display: flex; align-items: center; gap: 12px; }
+  .brand-logo { font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.5); letter-spacing: 0.08em; text-transform: uppercase; font-family: 'DM Mono', monospace; }
+  .client-name { font-size: 22px; font-weight: 600; color: #fff; letter-spacing: -0.5px; display: flex; align-items: center; gap: 10px; margin-top: 6px; }
+  .client-avatar { width: 44px; height: 44px; border-radius: 50%; background: rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; font-size: 22px; }
+  .live-dot { display: flex; align-items: center; gap: 6px; font-size: 11px; color: rgba(255,255,255,0.4); }
+  .dot { width: 7px; height: 7px; border-radius: 50%; background: #22c55e; animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+  /* CONTENT */
+  .content { max-width: 760px; margin: 0 auto; padding: 32px 20px; }
+
+  /* SECTION */
+  .section { margin-bottom: 28px; }
+  .section-title { font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text3); font-weight: 600; margin-bottom: 12px; }
+
+  /* PAYMENT SUMMARY */
+  .pay-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+  .pay-row { display: flex; justify-content: space-between; align-items: center; padding: 13px 18px; border-bottom: 1px solid var(--border); }
+  .pay-row:last-child { border-bottom: none; }
+  .pay-label { font-size: 13px; color: var(--text2); }
+  .pay-val { font-size: 13px; font-weight: 500; display: flex; align-items: center; gap: 8px; }
+  .pay-total-row { background: var(--accent-light); display: flex; justify-content: space-between; align-items: center; padding: 14px 18px; }
+  .pay-total-label { font-size: 13px; font-weight: 500; color: var(--accent); }
+  .pay-total-val { font-size: 20px; font-weight: 600; color: var(--accent); }
+  .pending-banner { background: var(--yellow-bg); border: 1px solid rgba(217,119,6,0.2); border-radius: var(--radius); padding: 14px 18px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
+  .pending-label { font-size: 13px; color: var(--yellow); font-weight: 500; }
+  .pending-val { font-size: 18px; font-weight: 600; color: var(--yellow); }
+
+  /* BADGES */
+  .badge { display: inline-flex; align-items: center; padding: 3px 9px; border-radius: 20px; font-size: 11px; font-weight: 500; }
+  .badge-green { background: var(--green-bg); color: var(--green); }
+  .badge-yellow { background: var(--yellow-bg); color: var(--yellow); }
+  .badge-red { background: var(--red-bg); color: var(--red); }
+  .badge-blue { background: var(--accent-light); color: var(--accent); }
+
+  /* CREATIVE CARDS */
+  .creative-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 18px; display: flex; align-items: center; gap: 14px; margin-bottom: 8px; transition: border-color 0.15s; }
+  .creative-card:hover { border-color: var(--border2); }
+  .creative-icon { width: 48px; height: 48px; border-radius: var(--radius-sm); background: var(--surface2); display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; }
+  .creative-info { flex: 1; min-width: 0; }
+  .creative-name { font-size: 14px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .creative-meta { font-size: 12px; color: var(--text3); margin-top: 3px; }
+  .dl-btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: var(--radius-sm); font-size: 13px; font-weight: 500; text-decoration: none; transition: all 0.15s; flex-shrink: 0; border: none; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+  .dl-btn-active { background: var(--accent); color: #fff; }
+  .dl-btn-active:hover { background: #1e40af; }
+  .dl-btn-locked { background: var(--surface2); color: var(--text3); cursor: not-allowed; }
+
+  /* OBS */
+  .obs-box { background: var(--surface2); border-radius: var(--radius-sm); padding: 8px 12px; font-size: 12px; color: var(--text2); margin-top: 6px; font-style: italic; }
+
+  /* EMPTY */
+  .empty { text-align: center; padding: 40px; color: var(--text3); }
+  .empty-icon { font-size: 32px; margin-bottom: 8px; opacity: 0.4; }
+
+  /* FOOTER */
+  .footer { text-align: center; padding: 32px; font-size: 12px; color: var(--text3); }
+  .footer a { color: var(--accent); text-decoration: none; }
+
+  /* ERROR / LOADING */
+  .loading { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 80vh; gap: 12px; color: var(--text2); }
+  .spinner { width: 32px; height: 32px; border: 2px solid var(--border2); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.7s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* RESPONSIVE */
+  @media (max-width: 500px) {
+    .header { padding: 20px; }
+    .content { padding: 20px 16px; }
+    .creative-card { flex-wrap: wrap; }
+    .dl-btn { width: 100%; justify-content: center; }
+  }
+</style>
+</head>
+<body>
+
+<div id="loading-screen" class="loading">
+  <div class="spinner"></div>
+  <span>Carregando seus materiais...</span>
+</div>
+
+<div id="error-screen" style="display:none" class="loading">
+  <div style="font-size:36px">⚠️</div>
+  <div id="error-msg" style="color:#dc2626;font-size:14px">Link inválido.</div>
+</div>
+
+<div id="main" style="display:none">
+  <div class="header">
+    <div class="header-inner">
+      <div>
+        <div class="brand-logo">Canutto Dev</div>
+        <div class="client-name">
+          <div class="client-avatar" id="cl-avatar">👤</div>
+          <span id="cl-nome">Carregando...</span>
+        </div>
+      </div>
+      <div class="live-dot"><div class="dot"></div> ao vivo</div>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- PAGAMENTOS -->
+    <div class="section" id="section-pagamentos">
+      <div class="section-title">Financeiro</div>
+      <div id="pending-banner"></div>
+      <div class="pay-card" id="pay-list"></div>
+    </div>
+
+    <!-- CRIATIVOS -->
+    <div class="section">
+      <div class="section-title">Seus criativos</div>
+      <div id="criativos-list"></div>
+    </div>
+
+  </div>
+
+  <div class="footer">
+    Desenvolvido por <a href="#" id="footer-brand">Canutto Dev</a> · Todos os materiais são de uso exclusivo do cliente acima.
+  </div>
+</div>
+
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+
+<script>
+const STORAGE_KEY = 'canutto_firebase_config';
+
+function getConfig() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY)); } catch { return null; }
+}
+
+function showError(msg) {
+  document.getElementById('loading-screen').style.display = 'none';
+  document.getElementById('error-screen').style.display = 'flex';
+  document.getElementById('error-msg').textContent = msg;
+}
+
+function fmt(v) { return 'R$ ' + (v||0).toFixed(2).replace('.', ','); }
+
+function statusBadge(s) {
+  const m = { 'entregue': 'badge-green', 'pago': 'badge-green', 'em andamento': 'badge-blue', 'revisão': 'badge-yellow', 'pendente': 'badge-yellow', 'atrasado': 'badge-red' };
+  return `<span class="badge ${m[s]||'badge-blue'}">${s}</span>`;
+}
+
+const params = new URLSearchParams(location.search);
+const clienteId = params.get('id');
+
+if (!clienteId) { window.onload = () => showError('Link inválido — ID do cliente não encontrado.'); }
+else {
+  const cfg = getConfig();
+  if (!cfg) {
+    window.onload = () => showError('Este sistema ainda não foi configurado. Acesse o painel admin primeiro.');
+  } else {
+    if (!firebase.apps.length) firebase.initializeApp(cfg);
+    const db = firebase.database();
+
+    db.ref('clientes/' + clienteId).on('value', snap => {
+      const cliente = snap.val();
+      if (!cliente) { showError('Cliente não encontrado. Verifique o link com quem te enviou.'); return; }
+
+      document.getElementById('loading-screen').style.display = 'none';
+      document.getElementById('main').style.display = 'block';
+      document.getElementById('cl-nome').textContent = cliente.nome;
+      document.getElementById('cl-avatar').textContent = cliente.emoji || '👤';
+      document.title = cliente.nome + ' — Canutto Dev';
+    });
+
+    db.ref('criativos').orderByChild('clienteId').equalTo(clienteId).on('value', snap => {
+      const data = snap.val() || {};
+      const list = Object.values(data).sort((a,b) => (b.ts||0)-(a.ts||0));
+      const el = document.getElementById('criativos-list');
+      if (!list.length) { el.innerHTML = '<div class="empty"><div class="empty-icon">🎨</div><p>Nenhum criativo disponível ainda.</p></div>'; return; }
+      el.innerHTML = list.map(c => {
+        const podeDownload = c.status === 'entregue' && c.link;
+        return `<div class="creative-card">
+          <div class="creative-icon">${c.tipo?c.tipo.split(' ')[0]:'🎨'}</div>
+          <div class="creative-info">
+            <div class="creative-name">${c.nome}</div>
+            <div class="creative-meta">${c.tipo||''} ${c.tamanho?'· '+c.tamanho:''} · ${c.data||''}</div>
+            ${c.obs ? `<div class="obs-box">${c.obs}</div>` : ''}
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex-shrink:0">
+            ${statusBadge(c.status)}
+            ${podeDownload
+              ? `<a href="${c.link}" target="_blank" class="dl-btn dl-btn-active">⬇ Baixar</a>`
+              : `<button class="dl-btn dl-btn-locked" disabled>🔒 ${c.status}</button>`}
+          </div>
+        </div>`;
+      }).join('');
+    });
+
+    db.ref('pagamentos').orderByChild('clienteId').equalTo(clienteId).on('value', snap => {
+      const data = snap.val() || {};
+      const list = Object.values(data).sort((a,b) => (b.ts||0)-(a.ts||0));
+      const payList = document.getElementById('pay-list');
+      const pendBanner = document.getElementById('pending-banner');
+
+      if (!list.length) {
+        document.getElementById('section-pagamentos').style.display = 'none';
+        return;
+      }
+      document.getElementById('section-pagamentos').style.display = 'block';
+
+      const totalPago = list.filter(p=>p.status==='pago').reduce((a,p)=>a+(p.valor||0),0);
+      const totalPend = list.filter(p=>p.status!=='pago').reduce((a,p)=>a+(p.valor||0),0);
+
+      pendBanner.innerHTML = totalPend > 0
+        ? `<div class="pending-banner"><span class="pending-label">⚠ Valor pendente</span><span class="pending-val">${fmt(totalPend)}</span></div>`
+        : '';
+
+      payList.innerHTML = list.map(p =>
+        `<div class="pay-row"><span class="pay-label">${p.desc}${p.venc?'<br><small style="color:var(--text3)">venc. '+p.venc+'</small>':''}</span><span class="pay-val">${fmt(p.valor)} ${statusBadge(p.status)}</span></div>`
+      ).join('') + `<div class="pay-total-row"><span class="pay-total-label">Total pago</span><span class="pay-total-val">${fmt(totalPago)}</span></div>`;
+    });
+  }
+}
+</script>
+</body>
+</html>
