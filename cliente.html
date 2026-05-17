@@ -1,253 +1,286 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Seus Materiais — Canutto Dev</title>
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Seus materiais — Canutto Dev</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  :root {
-    --bg: #f6f7f9;
-    --surface: #ffffff;
-    --surface2: #f0f2f5;
-    --border: rgba(0,0,0,0.07);
-    --border2: rgba(0,0,0,0.12);
-    --text: #111318;
-    --text2: #5a6070;
-    --text3: #9ba3b2;
-    --accent: #1d4ed8;
-    --accent-light: #eff6ff;
-    --green: #16a34a;
-    --green-bg: #f0fdf4;
-    --yellow: #d97706;
-    --yellow-bg: #fffbeb;
-    --red: #dc2626;
-    --red-bg: #fef2f2;
-    --radius: 12px;
-    --radius-sm: 8px;
-  }
-  body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#F8FAFC;
+  --surface:#ffffff;
+  --surface2:#f1f4f9;
+  --border:#e4e9f0;
+  --text:#010825;
+  --text2:#4a5568;
+  --text3:#94a3b8;
+  --accent:#2667FF;
+  --accent-dark:#001789;
+  --accent-light:#EEF3FF;
+  --grad:linear-gradient(135deg,#1CB4FF 0%,#002EC9 60%,#010825 100%);
+  --green:#16a34a;--green-bg:#f0fdf4;
+  --yellow:#d97706;--yellow-bg:#fffbeb;
+  --red:#dc2626;--red-bg:#fef2f2;
+  --r:14px;--r-sm:10px;--r-xs:6px;
+  --shadow:0 2px 10px rgba(1,8,37,.07);
+  --shadow-md:0 6px 24px rgba(1,8,37,.10);
+}
+body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
 
-  /* HEADER */
-  .header { background: #0f172a; padding: 28px 32px; }
-  .header-inner { max-width: 760px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; }
-  .brand { display: flex; align-items: center; gap: 12px; }
-  .brand-logo { font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.5); letter-spacing: 0.08em; text-transform: uppercase; font-family: 'DM Mono', monospace; }
-  .client-name { font-size: 22px; font-weight: 600; color: #fff; letter-spacing: -0.5px; display: flex; align-items: center; gap: 10px; margin-top: 6px; }
-  .client-avatar { width: 44px; height: 44px; border-radius: 50%; background: rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; font-size: 22px; }
-  .live-dot { display: flex; align-items: center; gap: 6px; font-size: 11px; color: rgba(255,255,255,0.4); }
-  .dot { width: 7px; height: 7px; border-radius: 50%; background: #22c55e; animation: pulse 2s infinite; }
-  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
+/* ── HEADER ── */
+.header{background:var(--accent-dark);background-image:var(--grad);padding:0}
+.header-top{display:flex;align-items:center;justify-content:space-between;padding:20px 32px 16px;max-width:820px;margin:0 auto}
+.brand{font-size:12px;font-weight:600;color:rgba(255,255,255,.5);letter-spacing:.1em;text-transform:uppercase}
+.live-pill{display:flex;align-items:center;gap:6px;font-size:11px;color:rgba(255,255,255,.55);background:rgba(255,255,255,.1);padding:5px 12px;border-radius:20px;border:1px solid rgba(255,255,255,.15)}
+.live-dot{width:7px;height:7px;border-radius:50%;background:#22c55e;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.header-client{padding:10px 32px 32px;max-width:820px;margin:0 auto;display:flex;align-items:center;gap:16px}
+.client-ava{width:60px;height:60px;border-radius:50%;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;font-size:28px;border:2px solid rgba(255,255,255,.25);flex-shrink:0}
+.client-greeting{font-size:12px;color:rgba(255,255,255,.6);margin-bottom:3px}
+.client-name{font-size:22px;font-weight:700;color:#fff;letter-spacing:-.5px}
+.client-sub{font-size:12px;color:rgba(255,255,255,.5);margin-top:2px}
 
-  /* CONTENT */
-  .content { max-width: 760px; margin: 0 auto; padding: 32px 20px; }
+/* ── CONTENT ── */
+.content{max-width:820px;margin:0 auto;padding:28px 20px 48px}
 
-  /* SECTION */
-  .section { margin-bottom: 28px; }
-  .section-title { font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text3); font-weight: 600; margin-bottom: 12px; }
+/* ── CARDS ── */
+.section{margin-bottom:32px}
+.section-label{font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--text3);font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.section-label::after{content:'';flex:1;height:1px;background:var(--border)}
 
-  /* PAYMENT SUMMARY */
-  .pay-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
-  .pay-row { display: flex; justify-content: space-between; align-items: center; padding: 13px 18px; border-bottom: 1px solid var(--border); }
-  .pay-row:last-child { border-bottom: none; }
-  .pay-label { font-size: 13px; color: var(--text2); }
-  .pay-val { font-size: 13px; font-weight: 500; display: flex; align-items: center; gap: 8px; }
-  .pay-total-row { background: var(--accent-light); display: flex; justify-content: space-between; align-items: center; padding: 14px 18px; }
-  .pay-total-label { font-size: 13px; font-weight: 500; color: var(--accent); }
-  .pay-total-val { font-size: 20px; font-weight: 600; color: var(--accent); }
-  .pending-banner { background: var(--yellow-bg); border: 1px solid rgba(217,119,6,0.2); border-radius: var(--radius); padding: 14px 18px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
-  .pending-label { font-size: 13px; color: var(--yellow); font-weight: 500; }
-  .pending-val { font-size: 18px; font-weight: 600; color: var(--yellow); }
+/* ── PAY CARD ── */
+.pay-overview{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
+.pay-stat{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:16px 18px;box-shadow:var(--shadow)}
+.pay-stat-label{font-size:11px;color:var(--text3);font-weight:600;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px}
+.pay-stat-val{font-size:22px;font-weight:700;letter-spacing:-.8px}
+.pay-stat-val.green{color:var(--green)}
+.pay-stat-val.yellow{color:var(--yellow)}
 
-  /* BADGES */
-  .badge { display: inline-flex; align-items: center; padding: 3px 9px; border-radius: 20px; font-size: 11px; font-weight: 500; }
-  .badge-green { background: var(--green-bg); color: var(--green); }
-  .badge-yellow { background: var(--yellow-bg); color: var(--yellow); }
-  .badge-red { background: var(--red-bg); color: var(--red); }
-  .badge-blue { background: var(--accent-light); color: var(--accent); }
+.pay-table{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;box-shadow:var(--shadow)}
+.pay-row{display:flex;align-items:center;justify-content:space-between;padding:13px 18px;border-bottom:1px solid var(--border)}
+.pay-row:last-child{border-bottom:none}
+.pay-label{font-size:13px;color:var(--text2);flex:1}
+.pay-label small{display:block;font-size:11px;color:var(--text3);margin-top:2px}
+.pay-right{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.pay-amount{font-size:14px;font-weight:700;color:var(--text)}
 
-  /* CREATIVE CARDS */
-  .creative-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 18px; display: flex; align-items: center; gap: 14px; margin-bottom: 8px; transition: border-color 0.15s; }
-  .creative-card:hover { border-color: var(--border2); }
-  .creative-icon { width: 48px; height: 48px; border-radius: var(--radius-sm); background: var(--surface2); display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; }
-  .creative-info { flex: 1; min-width: 0; }
-  .creative-name { font-size: 14px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .creative-meta { font-size: 12px; color: var(--text3); margin-top: 3px; }
-  .dl-btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: var(--radius-sm); font-size: 13px; font-weight: 500; text-decoration: none; transition: all 0.15s; flex-shrink: 0; border: none; cursor: pointer; font-family: 'DM Sans', sans-serif; }
-  .dl-btn-active { background: var(--accent); color: #fff; }
-  .dl-btn-active:hover { background: #1e40af; }
-  .dl-btn-locked { background: var(--surface2); color: var(--text3); cursor: not-allowed; }
+/* ── RECEIPT ── */
+.receipt-badge{display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:12px;font-size:11px;font-weight:600;background:var(--green-bg);color:var(--green);cursor:pointer;text-decoration:none;border:1px solid rgba(22,163,74,.2);transition:all .15s}
+.receipt-badge:hover{background:#dcfce7;box-shadow:0 2px 8px rgba(22,163,74,.2)}
 
-  /* OBS */
-  .obs-box { background: var(--surface2); border-radius: var(--radius-sm); padding: 8px 12px; font-size: 12px; color: var(--text2); margin-top: 6px; font-style: italic; }
+/* ── CREATIVE CARDS ── */
+.creative-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:16px 18px;display:flex;align-items:flex-start;gap:14px;margin-bottom:8px;box-shadow:var(--shadow);transition:all .15s}
+.creative-card:hover{border-color:var(--accent);box-shadow:var(--shadow-md)}
+.creative-icon{width:50px;height:50px;border-radius:var(--r-sm);background:var(--accent-light);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.creative-body{flex:1;min-width:0}
+.creative-name{font-size:14px;font-weight:600;color:var(--text);margin-bottom:3px}
+.creative-meta{font-size:12px;color:var(--text3);display:flex;flex-wrap:wrap;gap:4px;align-items:center}
+.creative-obs{font-size:12px;color:var(--text2);background:var(--surface2);border-radius:var(--r-xs);padding:6px 10px;margin-top:8px;font-style:italic}
+.creative-action{flex-shrink:0;display:flex;flex-direction:column;align-items:flex-end;gap:8px}
 
-  /* EMPTY */
-  .empty { text-align: center; padding: 40px; color: var(--text3); }
-  .empty-icon { font-size: 32px; margin-bottom: 8px; opacity: 0.4; }
+/* ── BADGES ── */
+.badge{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600}
+.badge::before{content:'';width:5px;height:5px;border-radius:50%;background:currentColor}
+.badge-green{background:var(--green-bg);color:var(--green)}
+.badge-yellow{background:var(--yellow-bg);color:var(--yellow)}
+.badge-red{background:var(--red-bg);color:var(--red)}
+.badge-blue{background:var(--accent-light);color:var(--accent)}
 
-  /* FOOTER */
-  .footer { text-align: center; padding: 32px; font-size: 12px; color: var(--text3); }
-  .footer a { color: var(--accent); text-decoration: none; }
+/* ── DL BUTTON ── */
+.dl-btn{display:inline-flex;align-items:center;gap:7px;padding:9px 18px;border-radius:var(--r-sm);font-size:13px;font-weight:600;font-family:'Poppins',sans-serif;text-decoration:none;transition:all .18s;border:none;cursor:pointer}
+.dl-active{background:var(--grad);color:#fff;box-shadow:0 2px 12px rgba(38,103,255,.3)}
+.dl-active:hover{box-shadow:0 4px 20px rgba(38,103,255,.4);transform:translateY(-1px)}
+.dl-locked{background:var(--surface2);color:var(--text3);cursor:not-allowed}
 
-  /* ERROR / LOADING */
-  .loading { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 80vh; gap: 12px; color: var(--text2); }
-  .spinner { width: 32px; height: 32px; border: 2px solid var(--border2); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.7s linear infinite; }
-  @keyframes spin { to { transform: rotate(360deg); } }
+/* ── LIGHTBOX ── */
+.lightbox{display:none;position:fixed;inset:0;background:rgba(1,8,37,.88);z-index:200;align-items:center;justify-content:center;cursor:zoom-out}
+.lightbox.open{display:flex}
+.lightbox img{max-width:90vw;max-height:90vh;border-radius:var(--r);box-shadow:0 20px 60px rgba(0,0,0,.5)}
 
-  /* RESPONSIVE */
-  @media (max-width: 500px) {
-    .header { padding: 20px; }
-    .content { padding: 20px 16px; }
-    .creative-card { flex-wrap: wrap; }
-    .dl-btn { width: 100%; justify-content: center; }
-  }
+/* ── EMPTY ── */
+.empty{text-align:center;padding:44px 20px;color:var(--text3)}
+.empty-icon{font-size:36px;margin-bottom:10px;opacity:.35}
+
+/* ── LOADING ── */
+.loading{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;background:var(--bg)}
+.spinner{width:36px;height:36px;border:2.5px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading p{font-size:13px;color:var(--text3);font-weight:500}
+
+/* ── FOOTER ── */
+.footer{text-align:center;padding:28px 20px;font-size:12px;color:var(--text3);border-top:1px solid var(--border)}
+.footer strong{color:var(--accent)}
+
+/* ── RESPONSIVE ── */
+@media(max-width:520px){
+  .header-top,.header-client{padding-left:16px;padding-right:16px}
+  .pay-overview{grid-template-columns:1fr}
+  .creative-card{flex-wrap:wrap}
+  .creative-action{flex-direction:row;align-items:center;width:100%}
+}
 </style>
 </head>
 <body>
 
-<div id="loading-screen" class="loading">
+<div id="loading" class="loading">
   <div class="spinner"></div>
-  <span>Carregando seus materiais...</span>
+  <p>Carregando seus materiais…</p>
 </div>
 
-<div id="error-screen" style="display:none" class="loading">
-  <div style="font-size:36px">⚠️</div>
-  <div id="error-msg" style="color:#dc2626;font-size:14px">Link inválido.</div>
+<div id="error" class="loading" style="display:none">
+  <div style="font-size:44px">⚠️</div>
+  <p id="error-msg" style="color:#dc2626;font-size:14px;font-weight:500">Link inválido.</p>
 </div>
 
 <div id="main" style="display:none">
   <div class="header">
-    <div class="header-inner">
+    <div class="header-top">
+      <div class="brand">Canutto Dev</div>
+      <div class="live-pill"><div class="live-dot"></div> ao vivo</div>
+    </div>
+    <div class="header-client">
+      <div class="client-ava" id="cl-ava">👤</div>
       <div>
-        <div class="brand-logo">Canutto Dev</div>
-        <div class="client-name">
-          <div class="client-avatar" id="cl-avatar">👤</div>
-          <span id="cl-nome">Carregando...</span>
-        </div>
+        <div class="client-greeting">Olá! Aqui estão seus materiais 👋</div>
+        <div class="client-name" id="cl-nome">Carregando…</div>
+        <div class="client-sub">Acompanhe seus criativos e pagamentos em tempo real</div>
       </div>
-      <div class="live-dot"><div class="dot"></div> ao vivo</div>
     </div>
   </div>
 
   <div class="content">
 
-    <!-- PAGAMENTOS -->
-    <div class="section" id="section-pagamentos">
-      <div class="section-title">Financeiro</div>
-      <div id="pending-banner"></div>
-      <div class="pay-card" id="pay-list"></div>
+    <div class="section" id="sec-pag">
+      <div class="section-label">Financeiro</div>
+      <div class="pay-overview">
+        <div class="pay-stat">
+          <div class="pay-stat-label">Total pago</div>
+          <div class="pay-stat-val green" id="total-pago">R$ 0,00</div>
+        </div>
+        <div class="pay-stat">
+          <div class="pay-stat-label">Pendente</div>
+          <div class="pay-stat-val yellow" id="total-pend">R$ 0,00</div>
+        </div>
+      </div>
+      <div class="pay-table" id="pay-list"></div>
     </div>
 
-    <!-- CRIATIVOS -->
     <div class="section">
-      <div class="section-title">Seus criativos</div>
+      <div class="section-label">Seus criativos</div>
       <div id="criativos-list"></div>
     </div>
 
   </div>
 
   <div class="footer">
-    Desenvolvido por <a href="#" id="footer-brand">Canutto Dev</a> · Todos os materiais são de uso exclusivo do cliente acima.
+    Desenvolvido com ♥ por <strong>Canutto Dev</strong> · Todos os materiais são de uso exclusivo do cliente identificado acima.
   </div>
 </div>
 
-<!-- Firebase SDK -->
+<div class="lightbox" id="lightbox" onclick="this.classList.remove('open')">
+  <img id="lb-img" src="" alt="comprovante"/>
+</div>
+
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
-
 <script>
-const STORAGE_KEY = 'canutto_firebase_config';
+// AQUI ESTÁ A SUA CHAVE INJETADA NO CÓDIGO!
+const firebaseConfig = {
+  "apiKey": "AIzaSyB0awWb0P6Ud0ticd9VqZ_muNs2zOSDFF8",
+  "authDomain": "canutto-criativos.firebaseapp.com",
+  "databaseURL": "https://canutto-criativos-default-rtdb.firebaseio.com",
+  "projectId": "canutto-criativos",
+  "storageBucket": "canutto-criativos.firebasestorage.app",
+  "messagingSenderId": "401734311379",
+  "appId": "1:401734311379:web:9be8899b781960a0282326",
+  "measurementId": "G-K2SZ2V015B"
+};
 
-function getConfig() {
-  try { return JSON.parse(localStorage.getItem(STORAGE_KEY)); } catch { return null; }
-}
-
-function showError(msg) {
-  document.getElementById('loading-screen').style.display = 'none';
-  document.getElementById('error-screen').style.display = 'flex';
-  document.getElementById('error-msg').textContent = msg;
-}
-
-function fmt(v) { return 'R$ ' + (v||0).toFixed(2).replace('.', ','); }
-
-function statusBadge(s) {
-  const m = { 'entregue': 'badge-green', 'pago': 'badge-green', 'em andamento': 'badge-blue', 'revisão': 'badge-yellow', 'pendente': 'badge-yellow', 'atrasado': 'badge-red' };
+function fmt(v){return 'R$ '+(v||0).toFixed(2).replace('.',',');}
+function statusBadge(s){
+  const m={entregue:'badge-green',pago:'badge-green','em andamento':'badge-blue','revisão':'badge-yellow',pendente:'badge-yellow',atrasado:'badge-red'};
   return `<span class="badge ${m[s]||'badge-blue'}">${s}</span>`;
 }
+function showErr(msg){
+  document.getElementById('loading').style.display='none';
+  document.getElementById('error').style.display='flex';
+  document.getElementById('error-msg').textContent=msg;
+}
+function openLightbox(src){document.getElementById('lb-img').src=src;document.getElementById('lightbox').classList.add('open');}
 
-const params = new URLSearchParams(location.search);
-const clienteId = params.get('id');
+const params=new URLSearchParams(location.search);
+const clienteId=params.get('id');
 
-if (!clienteId) { window.onload = () => showError('Link inválido — ID do cliente não encontrado.'); }
-else {
-  const cfg = getConfig();
-  if (!cfg) {
-    window.onload = () => showError('Este sistema ainda não foi configurado. Acesse o painel admin primeiro.');
-  } else {
-    if (!firebase.apps.length) firebase.initializeApp(cfg);
-    const db = firebase.database();
+if(!clienteId){
+  window.onload=()=>showErr('Link inválido — ID do cliente não encontrado.');
+}
+else{
+  if(!firebase.apps.length)firebase.initializeApp(firebaseConfig);
+  const db=firebase.database();
 
-    db.ref('clientes/' + clienteId).on('value', snap => {
-      const cliente = snap.val();
-      if (!cliente) { showError('Cliente não encontrado. Verifique o link com quem te enviou.'); return; }
+  db.ref('clientes/'+clienteId).on('value',snap=>{
+    const c=snap.val();
+    if(!c){showErr('Cliente não encontrado. Verifique o link com o designer.');return;}
+    document.getElementById('loading').style.display='none';
+    document.getElementById('main').style.display='block';
+    document.getElementById('cl-nome').textContent=c.nome;
+    document.getElementById('cl-ava').textContent=c.emoji||'👤';
+    document.title=c.nome+' — Canutto Dev';
+  });
 
-      document.getElementById('loading-screen').style.display = 'none';
-      document.getElementById('main').style.display = 'block';
-      document.getElementById('cl-nome').textContent = cliente.nome;
-      document.getElementById('cl-avatar').textContent = cliente.emoji || '👤';
-      document.title = cliente.nome + ' — Canutto Dev';
-    });
+  db.ref('pagamentos').orderByChild('clienteId').equalTo(clienteId).on('value',snap=>{
+    const data=snap.val()||{};
+    const list=Object.values(data).sort((a,b)=>(b.ts||0)-(a.ts||0));
+    const secPag=document.getElementById('sec-pag');
+    if(!list.length){secPag.style.display='none';return;}
+    secPag.style.display='block';
+    const pago=list.filter(p=>p.status==='pago').reduce((a,p)=>a+(p.valor||0),0);
+    const pend=list.filter(p=>p.status!=='pago').reduce((a,p)=>a+(p.valor||0),0);
+    document.getElementById('total-pago').textContent=fmt(pago);
+    document.getElementById('total-pend').textContent=fmt(pend);
+    document.getElementById('pay-list').innerHTML=list.map(p=>{
+      const receiptEl=p.receiptB64
+        ?`<a class="receipt-badge" onclick="openLightbox('data:${p.receiptMime};base64,${p.receiptB64}')">📎 Comprovante</a>`
+        :'';
+      return `<div class="pay-row">
+        <div class="pay-label">${p.desc}${p.venc?`<small>Vencimento: ${p.venc}</small>`:''}</div>
+        <div class="pay-right">
+          ${receiptEl}
+          <span class="pay-amount">${fmt(p.valor)}</span>
+          ${statusBadge(p.status)}
+        </div>
+      </div>`;
+    }).join('');
+  });
 
-    db.ref('criativos').orderByChild('clienteId').equalTo(clienteId).on('value', snap => {
-      const data = snap.val() || {};
-      const list = Object.values(data).sort((a,b) => (b.ts||0)-(a.ts||0));
-      const el = document.getElementById('criativos-list');
-      if (!list.length) { el.innerHTML = '<div class="empty"><div class="empty-icon">🎨</div><p>Nenhum criativo disponível ainda.</p></div>'; return; }
-      el.innerHTML = list.map(c => {
-        const podeDownload = c.status === 'entregue' && c.link;
-        return `<div class="creative-card">
-          <div class="creative-icon">${c.tipo?c.tipo.split(' ')[0]:'🎨'}</div>
-          <div class="creative-info">
-            <div class="creative-name">${c.nome}</div>
-            <div class="creative-meta">${c.tipo||''} ${c.tamanho?'· '+c.tamanho:''} · ${c.data||''}</div>
-            ${c.obs ? `<div class="obs-box">${c.obs}</div>` : ''}
+  db.ref('criativos').orderByChild('clienteId').equalTo(clienteId).on('value',snap=>{
+    const data=snap.val()||{};
+    const list=Object.values(data).sort((a,b)=>(b.ts||0)-(a.ts||0));
+    const el=document.getElementById('criativos-list');
+    if(!list.length){el.innerHTML='<div class="empty"><div class="empty-icon">🎨</div><p style="font-size:13px;font-weight:500">Nenhum criativo disponível ainda.</p></div>';return;}
+    el.innerHTML=list.map(c=>{
+      const pode=c.status==='entregue'&&c.link;
+      return `<div class="creative-card">
+        <div class="creative-icon">${c.tipo?c.tipo.split(' ')[0]:'🎨'}</div>
+        <div class="creative-body">
+          <div class="creative-name">${c.nome}</div>
+          <div class="creative-meta">
+            <span>${c.tipo||''}</span>
+            ${c.tamanho?`<span style="color:var(--border)">·</span><span>${c.tamanho}</span>`:''}
+            <span style="color:var(--border)">·</span><span>${c.data||''}</span>
           </div>
-          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex-shrink:0">
-            ${statusBadge(c.status)}
-            ${podeDownload
-              ? `<a href="${c.link}" target="_blank" class="dl-btn dl-btn-active">⬇ Baixar</a>`
-              : `<button class="dl-btn dl-btn-locked" disabled>🔒 ${c.status}</button>`}
-          </div>
-        </div>`;
-      }).join('');
-    });
-
-    db.ref('pagamentos').orderByChild('clienteId').equalTo(clienteId).on('value', snap => {
-      const data = snap.val() || {};
-      const list = Object.values(data).sort((a,b) => (b.ts||0)-(a.ts||0));
-      const payList = document.getElementById('pay-list');
-      const pendBanner = document.getElementById('pending-banner');
-
-      if (!list.length) {
-        document.getElementById('section-pagamentos').style.display = 'none';
-        return;
-      }
-      document.getElementById('section-pagamentos').style.display = 'block';
-
-      const totalPago = list.filter(p=>p.status==='pago').reduce((a,p)=>a+(p.valor||0),0);
-      const totalPend = list.filter(p=>p.status!=='pago').reduce((a,p)=>a+(p.valor||0),0);
-
-      pendBanner.innerHTML = totalPend > 0
-        ? `<div class="pending-banner"><span class="pending-label">⚠ Valor pendente</span><span class="pending-val">${fmt(totalPend)}</span></div>`
-        : '';
-
-      payList.innerHTML = list.map(p =>
-        `<div class="pay-row"><span class="pay-label">${p.desc}${p.venc?'<br><small style="color:var(--text3)">venc. '+p.venc+'</small>':''}</span><span class="pay-val">${fmt(p.valor)} ${statusBadge(p.status)}</span></div>`
-      ).join('') + `<div class="pay-total-row"><span class="pay-total-label">Total pago</span><span class="pay-total-val">${fmt(totalPago)}</span></div>`;
-    });
-  }
+          ${c.obs?`<div class="creative-obs">${c.obs}</div>`:''}
+        </div>
+        <div class="creative-action">
+          ${statusBadge(c.status)}
+          ${pode
+            ?`<a href="${c.link}" target="_blank" class="dl-btn dl-active">⬇ Baixar arquivo</a>`
+            :`<button class="dl-btn dl-locked" disabled>🔒 ${c.status}</button>`}
+        </div>
+      </div>`;
+    }).join('');
+  });
 }
 </script>
 </body>
