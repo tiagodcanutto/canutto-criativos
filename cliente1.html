@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Seus materiais — Canutto Criativos</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#F0F4FF;
+  --surface:#ffffff;
+  --surface2:#f5f7ff;
+  --border:rgba(38,103,255,.10);
+  --border2:rgba(38,103,255,.18);
+  --text:#010825;
+  --text2:#3d4966;
+  --text3:#8a96b0;
+  --accent:#2667FF;
+  --accent-dk:#001789;
+  --accent-lt:#EEF3FF;
+  --grad:linear-gradient(135deg,#1CB4FF 0%,#2667FF 55%,#001789 100%);
+  --green:#15803d;--green-lt:#f0fdf4;--green-bd:rgba(21,128,61,.18);
+  --amber:#b45309;--amber-lt:#fffbeb;--amber-bd:rgba(180,83,9,.18);
+  --red:#dc2626;--red-lt:#fef2f2;--red-bd:rgba(220,38,38,.18);
+  --r:14px;--r-sm:10px;--r-xs:6px;
+  --sh:0 1px 4px rgba(1,8,37,.06),0 4px 14px rgba(1,8,37,.06);
+  --sh-md:0 4px 16px rgba(1,8,37,.09),0 12px 40px rgba(1,8,37,.10);
+  --sh-lg:0 8px 28px rgba(1,8,37,.12),0 24px 64px rgba(1,8,37,.14);
+}
+html{scroll-behavior:smooth}
+body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;-webkit-font-smoothing:antialiased}
+button{font-family:'Poppins',sans-serif}
+input,select,textarea{font-family:'Poppins',sans-serif}
+
+/* ── LOADING / ERROR ── */
+.full-center{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:20px;background:var(--bg)}
+.spinner{width:36px;height:36px;border:2.5px solid rgba(38,103,255,.2);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite}
+.full-center p{font-size:13px;color:var(--text3);font-weight:500;text-align:center;max-width:300px;line-height:1.55}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+
+/* ── HEADER ── */
+.hdr{background:var(--accent-dk);background-image:var(--grad)}
+.hdr-inner{max-width:800px;margin:0 auto}
+.hdr-top{display:flex;align-items:center;justify-content:space-between;padding:18px 28px 14px}
+.hdr-brand{font-size:12px;font-weight:700;color:rgba(255,255,255,.45);letter-spacing:.1em;text-transform:uppercase}
+.live-pill{display:flex;align-items:center;gap:6px;font-size:11px;color:rgba(255,255,255,.5);background:rgba(255,255,255,.1);padding:5px 12px;border-radius:20px;border:1px solid rgba(255,255,255,.15)}
+.live-dot{width:7px;height:7px;border-radius:50%;background:#22c55e;animation:pulse 2s infinite;flex-shrink:0}
+.hdr-client{padding:8px 28px 30px;display:flex;align-items:center;gap:16px}
+.cl-ava{width:56px;height:56px;border-radius:50%;background:rgba(255,255,255,.15);border:2px solid rgba(255,255,255,.25);display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0}
+.cl-greet{font-size:12px;color:rgba(255,255,255,.55);margin-bottom:3px}
+.cl-name{font-size:21px;font-weight:700;color:#fff;letter-spacing:-.5px;line-height:1.2}
+.cl-sub{font-size:12px;color:rgba(255,255,255,.45);margin-top:3px}
+
+/* ── NAV TABS ── */
+.tabs{background:rgba(0,0,0,.2);border-top:1px solid rgba(255,255,255,.1)}
+.tabs-inner{max-width:800px;margin:0 auto;display:flex;padding:0 20px;gap:4px}
+.tab{padding:12px 18px;font-size:13px;font-weight:500;color:rgba(255,255,255,.5);cursor:pointer;border-bottom:2px solid transparent;transition:all .18s;border-radius:0;background:none;border-top:none;border-left:none;border-right:none;white-space:nowrap}
+.tab:hover{color:rgba(255,255,255,.8)}
+.tab.on{color:#fff;border-bottom-color:#fff;font-weight:600}
+@media(max-width:480px){.tabs-inner{gap:0}.tab{padding:10px 12px;font-size:12px}}
+
+/* ── CONTENT ── */
+.content{max-width:800px;margin:0 auto;padding:24px 20px 60px}
+.pane{display:none;animation:fadeUp .25s ease}.pane.on{display:block}
+
+/* ── SECTION LABEL ── */
+.sec-lbl{font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--text3);font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.sec-lbl::after{content:'';flex:1;height:1px;background:var(--border)}
+.sec-lbl .cnt-badge{background:var(--accent);color:#fff;font-size:10px;padding:2px 7px;border-radius:20px;font-weight:700}
+
+/* ── SUMMARY CARDS ── */
+.sum-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px}
+.sum-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:16px 18px;box-shadow:var(--sh)}
+.sum-lbl{font-size:11px;color:var(--text3);font-weight:600;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px}
+.sum-val{font-size:22px;font-weight:700;letter-spacing:-.8px}
+.sum-val.green{color:var(--green)}
+@media(max-width:400px){.sum-grid{grid-template-columns:1fr}}
+
+/* ── PENDÊNCIA BANNER ── */
+.pend-banner{background:var(--amber-lt);border:1px solid var(--amber-bd);border-radius:var(--r);padding:16px 20px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.pend-left{}
+.pend-title{font-size:13px;font-weight:600;color:var(--amber);margin-bottom:2px}
+.pend-sub{font-size:12px;color:var(--amber);opacity:.75}
+.pend-val{font-size:22px;font-weight:700;color:var(--amber);letter-spacing:-.5px;flex-shrink:0}
+
+/* ── PAY TABLE ── */
+.pay-table{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;box-shadow:var(--sh)}
+.pay-row{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--border);gap:12px;flex-wrap:wrap}
+.pay-row:last-child{border-bottom:none}
+.pay-desc{font-size:13px;font-weight:500;color:var(--text);flex:1;min-width:0}
+.pay-desc small{display:block;font-size:11px;color:var(--text3);margin-top:2px;font-weight:400}
+.pay-right{display:flex;align-items:center;gap:8px;flex-wrap:wrap;flex-shrink:0}
+.pay-amt{font-size:14px;font-weight:700;color:var(--text)}
+.receipt-btn{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:12px;font-size:11px;font-weight:600;background:var(--green-lt);color:var(--green);cursor:pointer;border:1px solid var(--green-bd);transition:all .15s;text-decoration:none}
+.receipt-btn:hover{background:#dcfce7;box-shadow:0 2px 8px rgba(21,128,61,.15)}
+
+/* ── BADGES ── */
+.badge{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;white-space:nowrap}
+.badge::before{content:'';width:5px;height:5px;border-radius:50%;background:currentColor;flex-shrink:0}
+.b-green{background:var(--green-lt);color:var(--green);border:1px solid var(--green-bd)}
+.b-amber{background:var(--amber-lt);color:var(--amber);border:1px solid var(--amber-bd)}
+.b-red{background:var(--red-lt);color:var(--red);border:1px solid var(--red-bd)}
+.b-blue{background:var(--accent-lt);color:var(--accent);border:1px solid rgba(38,103,255,.2)}
+
+/* ── CREATIVE CARDS ── */
+.cr-card{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);padding:16px 18px;display:flex;gap:14px;align-items:flex-start;margin-bottom:8px;box-shadow:var(--sh);transition:all .18s}
+.cr-card:hover{border-color:rgba(38,103,255,.25);box-shadow:var(--sh-md)}
+.cr-ico{width:50px;height:50px;border-radius:var(--r-sm);background:var(--accent-lt);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.cr-body{flex:1;min-width:0}
+.cr-name{font-size:14px;font-weight:600;color:var(--text);margin-bottom:3px}
+.cr-meta{font-size:12px;color:var(--text3);display:flex;flex-wrap:wrap;gap:4px;align-items:center}
+.cr-meta .sep{color:var(--border2)}
+.cr-obs{font-size:12px;color:var(--text2);background:var(--surface2);border-radius:var(--r-xs);padding:7px 11px;margin-top:8px;font-style:italic;line-height:1.5}
+.cr-actions{flex-shrink:0;display:flex;flex-direction:column;align-items:flex-end;gap:8px}
+
+/* DL BUTTON */
+.dl-btn{display:inline-flex;align-items:center;gap:7px;padding:10px 18px;border-radius:var(--r-sm);font-size:13px;font-weight:600;text-decoration:none;transition:all .18s;border:none;cursor:pointer;white-space:nowrap}
+.dl-on{background:var(--grad);color:#fff;box-shadow:0 2px 14px rgba(38,103,255,.28)}
+.dl-on:hover{transform:translateY(-1px);box-shadow:0 4px 22px rgba(38,103,255,.4)}
+.dl-off{background:var(--surface2);color:var(--text3);cursor:not-allowed}
+
+/* APPROVE BUTTONS */
+.approve-row{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}
+.btn-approve{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:var(--r-sm);font-size:12px;font-weight:600;cursor:pointer;border:none;transition:all .18s}
+.btn-apv-yes{background:var(--green-lt);color:var(--green);border:1.5px solid var(--green-bd)}
+.btn-apv-yes:hover{background:#dcfce7;transform:translateY(-1px)}
+.btn-apv-rev{background:var(--amber-lt);color:var(--amber);border:1.5px solid var(--amber-bd)}
+.btn-apv-rev:hover{background:#fef3c7;transform:translateY(-1px)}
+
+/* RESPONSIVE CARD */
+@media(max-width:500px){
+  .cr-card{flex-wrap:wrap;gap:10px}
+  .cr-actions{flex-direction:row;flex-wrap:wrap;align-items:center;width:100%;justify-content:flex-start}
+  .dl-btn{padding:9px 14px;font-size:12px}
+}
+
+/* ── PAINEL FINANCEIRO (criativos count) ── */
+.fin-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px}
+.fin-stat{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-sm);padding:14px 16px;box-shadow:var(--sh);text-align:center}
+.fin-stat-val{font-size:22px;font-weight:700;color:var(--text);letter-spacing:-.5px}
+.fin-stat-val.green{color:var(--green)}
+.fin-stat-lbl{font-size:11px;color:var(--text3);margin-top:4px;font-weight:500}
+@media(max-width:400px){.fin-stats{grid-template-columns:1fr 1fr}}
+
+/* ── BRIEFING FORM ── */
+.brief-card{background:var(--surface);border:1.5px solid var(--border2);border-radius:var(--r);padding:22px;box-shadow:var(--sh-md)}
+.brief-title{font-size:15px;font-weight:700;color:var(--text);margin-bottom:6px;letter-spacing:-.3px}
+.brief-sub{font-size:13px;color:var(--text2);margin-bottom:18px;line-height:1.55}
+.f{margin-bottom:14px}
+.f label{display:block;font-size:11.5px;font-weight:600;color:var(--text2);margin-bottom:5px;text-transform:uppercase;letter-spacing:.03em}
+.f input,.f select,.f textarea{width:100%;background:var(--bg);border:1.5px solid var(--border2);border-radius:var(--r-sm);padding:10px 14px;font-size:13px;color:var(--text);transition:border-color .15s;outline:none}
+.f input:focus,.f select:focus,.f textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(38,103,255,.10);background:#fff}
+.f input::placeholder,.f textarea::placeholder{color:var(--text3)}
+.f textarea{resize:vertical;min-height:90px;line-height:1.55}
+.brief-sent{background:var(--green-lt);border:1px solid var(--green-bd);border-radius:var(--r);padding:20px;text-align:center;display:none}
+.brief-sent .big{font-size:32px;margin-bottom:8px}
+.brief-sent p{font-size:13px;color:var(--green);font-weight:500}
+
+/* ── LIGHTBOX ── */
+.lightbox{display:none;position:fixed;inset:0;background:rgba(1,8,37,.92);z-index:200;align-items:center;justify-content:center;padding:20px;cursor:zoom-out}
+.lightbox.on{display:flex}
+.lightbox img{max-width:100%;max-height:90vh;border-radius:var(--r);box-shadow:var(--sh-lg)}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:20px;right:20px;left:auto;max-width:280px;background:var(--text);color:#fff;border-radius:var(--r-sm);padding:12px 18px;font-size:13px;font-weight:500;z-index:999;transform:translateY(80px);opacity:0;transition:all .32s cubic-bezier(.34,1.56,.64,1);pointer-events:none;box-shadow:var(--sh-lg)}
+.toast.on{transform:translateY(0);opacity:1}
+.toast.ok{background:var(--green)}
+.toast.err{background:var(--red)}
+@media(max-width:440px){.toast{left:16px;right:16px;max-width:none;bottom:12px}}
+
+/* ── EMPTY ── */
+.empty{text-align:center;padding:44px 20px;color:var(--text3)}
+.empty-ico{font-size:38px;margin-bottom:10px;opacity:.3}
+.empty p{font-size:13px;font-weight:500;line-height:1.6}
+
+/* ── FOOTER ── */
+.footer{text-align:center;padding:28px 20px;font-size:12px;color:var(--text3);border-top:1px solid var(--border)}
+.footer strong{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-weight:700}
+
+/* SCROLLBAR */
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:rgba(38,103,255,.2);border-radius:3px}
+</style>
+</head>
+<body>
+
+<!-- LOADING -->
+<div id="loading" class="full-center">
+  <div class="spinner"></div>
+  <p>Carregando seus materiais…</p>
+</div>
+
+<!-- ERROR -->
+<div id="error" class="full-center" style="display:none">
+  <div style="font-size:48px">⚠️</div>
+  <p id="err-msg" style="color:var(--red);font-weight:600">Link inválido.</p>
+</div>
+
+<!-- MAIN -->
+<div id="main" style="display:none">
+
+  <!-- HEADER -->
+  <div class="hdr">
+    <div class="hdr-inner">
+      <div class="hdr-top">
+        <div class="hdr-brand">Canutto Criativos</div>
+        <div class="live-pill"><div class="live-dot"></div> atualização ao vivo</div>
+      </div>
+      <div class="hdr-client">
+        <div class="cl-ava" id="cl-ava">👤</div>
+        <div>
+          <div class="cl-greet">Olá! Aqui estão seus materiais 👋</div>
+          <div class="cl-name" id="cl-nome">…</div>
+          <div class="cl-sub">Acompanhe criativos e pagamentos em tempo real</div>
+        </div>
+      </div>
+      <div class="tabs">
+        <div class="tabs-inner">
+          <button class="tab on" onclick="goTab('criativos',this)">🎨 Criativos</button>
+          <button class="tab" onclick="goTab('financeiro',this)">💳 Financeiro</button>
+          <button class="tab" onclick="goTab('pedido',this)">📋 Fazer pedido</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <!-- TAB CRIATIVOS -->
+    <div class="pane on" id="pane-criativos">
+      <div class="sec-lbl" style="margin-top:4px">Seus criativos <span class="cnt-badge" id="cnt-cr">0</span></div>
+      <div id="list-cr"></div>
+    </div>
+
+    <!-- TAB FINANCEIRO -->
+    <div class="pane" id="pane-financeiro">
+      <!-- Só mostra valor PENDENTE e estatísticas de criativos/pagamentos -->
+      <div id="pend-container"></div>
+
+      <div class="sec-lbl" style="margin-top:20px">Resumo</div>
+      <div class="fin-stats">
+        <div class="fin-stat"><div class="fin-stat-val green" id="f-entregues">0</div><div class="fin-stat-lbl">Criativos entregues</div></div>
+        <div class="fin-stat"><div class="fin-stat-val" id="f-pagos">0</div><div class="fin-stat-lbl">Cobranças pagas</div></div>
+        <div class="fin-stat"><div class="fin-stat-val" id="f-comp">0</div><div class="fin-stat-lbl">Comprovantes</div></div>
+      </div>
+
+      <!-- Lista de cobranças: SEM VALOR PAGO, apenas pendentes + comprovantes -->
+      <div id="pay-pend-section" style="display:none">
+        <div class="sec-lbl">Cobranças pendentes</div>
+        <div class="pay-table" id="pay-pend-list"></div>
+      </div>
+
+      <!-- Comprovantes de pagamento -->
+      <div id="comp-section" style="display:none">
+        <div class="sec-lbl" style="margin-top:20px">Comprovantes de pagamento recebidos</div>
+        <div id="comp-list"></div>
+      </div>
+    </div>
+
+    <!-- TAB PEDIDO (Briefing) -->
+    <div class="pane" id="pane-pedido">
+      <div class="brief-card">
+        <div class="brief-title">📋 Fazer um novo pedido</div>
+        <div class="brief-sub">Descreva o que precisa e o Canutto Criativos vai receber diretamente no painel. Assim nenhuma informação se perde no WhatsApp!</div>
+
+        <div id="brief-form">
+          <div class="f"><label>Título do pedido *</label><input id="b-tit" placeholder="Ex: Banner para o Instagram de julho"/></div>
+          <div class="f"><label>Descrição / O que precisa?</label><textarea id="b-desc" placeholder="Descreva o que você precisa com o máximo de detalhes possível…"></textarea></div>
+          <div class="f"><label>Referências de estilo (links, nomes...)</label><input id="b-ref" placeholder="Ex: estilo minimalista como a marca X..."/></div>
+          <div class="f"><label>Paleta de cores / preferências visuais</label><input id="b-cor" placeholder="Ex: azul escuro e branco, sem muito texto..."/></div>
+          <div class="f"><label>Prazo desejado</label><input type="date" id="b-prazo"/></div>
+          <button class="dl-btn dl-on" style="width:100%;justify-content:center;margin-top:4px" onclick="enviarPedido()">Enviar pedido →</button>
+        </div>
+        <div class="brief-sent" id="brief-sent">
+          <div class="big">✅</div>
+          <p>Pedido enviado com sucesso!<br>O estúdio vai ver sua solicitação no painel e entrará em contato.</p>
+          <button class="dl-btn dl-on" style="margin-top:16px" onclick="novoPedido()">Fazer outro pedido</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="footer">Desenvolvido com ♥ por <strong>Canutto Criativos</strong> · Todos os materiais são de uso exclusivo do cliente identificado acima.</div>
+</div>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lbox" onclick="this.classList.remove('on')">
+  <img id="lbox-img" src="" alt="comprovante"/>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+<script>
+// ══════════════════════════════════════════
+// FIREBASE CONFIG
+// ══════════════════════════════════════════
+const firebaseConfig = {
+  "apiKey": "AIzaSyB0awWb0P6Ud0ticd9VqZ_muNs2zOSDFF8",
+  "authDomain": "canutto-criativos.firebaseapp.com",
+  "databaseURL": "https://canutto-criativos-default-rtdb.firebaseio.com",
+  "projectId": "canutto-criativos",
+  "storageBucket": "canutto-criativos.firebasestorage.app",
+  "messagingSenderId": "401734311379",
+  "appId": "1:401734311379:web:9be8899b781960a0282326"
+};
+
+// ══════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════
+const params = new URLSearchParams(location.search);
+const clienteId = params.get('id');
+
+function showErr(msg){
+  document.getElementById('loading').style.display='none';
+  document.getElementById('error').style.display='flex';
+  document.getElementById('err-msg').textContent=msg;
+}
+
+if(!clienteId){
+  window.addEventListener('load',()=>showErr('Link inválido — ID do cliente não encontrado.'));
+} else {
+  if(!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+  const db = firebase.database();
+
+  // ── CLIENTE ──
+  db.ref('clientes/'+clienteId).on('value', snap=>{
+    const c = snap.val();
+    if(!c){ showErr('Cliente não encontrado. Verifique o link com o estúdio.'); return; }
+    document.getElementById('loading').style.display='none';
+    document.getElementById('main').style.display='block';
+    document.getElementById('cl-nome').textContent = c.nome;
+    document.getElementById('cl-ava').textContent = c.emoji||'👤';
+    document.title = c.nome+' — Canutto Criativos';
+  });
+
+  // ── CRIATIVOS ──
+  db.ref('criativos').orderByChild('clienteId').equalTo(clienteId).on('value', snap=>{
+    const data = snap.val()||{};
+    const list = Object.entries(data).sort((a,b)=>(b[1].ts||0)-(a[1].ts||0));
+    const el = document.getElementById('list-cr');
+    document.getElementById('cnt-cr').textContent = list.length;
+
+    // Para painel financeiro: contagem de entregues
+    const entregues = list.filter(([,c])=>c.status==='entregue').length;
+    document.getElementById('f-entregues').textContent = entregues;
+
+    if(!list.length){
+      el.innerHTML='<div class="empty"><div class="empty-ico">🎨</div><p>Nenhum criativo disponível ainda.<br>Em breve seus materiais aparecerão aqui!</p></div>';
+      return;
+    }
+
+    el.innerHTML = list.map(([id,c])=>{
+      const pode = c.status==='entregue' && c.link;
+      const podeAprovar = c.status==='revisão';
+
+      const approveButtons = podeAprovar
+        ? `<div class="approve-row">
+            <button class="btn-approve btn-apv-yes" onclick="aprovar('${id}')">✅ Aprovar arte</button>
+            <button class="btn-approve btn-apv-rev" onclick="solicitarAlt('${id}')">✏️ Solicitar alteração</button>
+          </div>`
+        : '';
+
+      return `<div class="cr-card">
+        <div class="cr-ico">${c.tipo?c.tipo.split(' ')[0]:'🎨'}</div>
+        <div class="cr-body">
+          <div class="cr-name">${c.nome}</div>
+          <div class="cr-meta">
+            <span>${c.tipo||''}</span>
+            ${c.tamanho?`<span class="sep">·</span><span>${c.tamanho}</span>`:''}
+            <span class="sep">·</span><span>${c.data||''}</span>
+          </div>
+          ${c.obs?`<div class="cr-obs">${c.obs}</div>`:''}
+          ${approveButtons}
+        </div>
+        <div class="cr-actions">
+          ${badgeHTML(c.status)}
+          ${pode
+            ?`<a href="${c.link}" target="_blank" class="dl-btn dl-on">⬇ Baixar</a>`
+            :`<button class="dl-btn dl-off" disabled>🔒 ${c.status}</button>`}
+        </div>
+      </div>`;
+    }).join('');
+  });
+
+  // ── PAGAMENTOS ──
+  db.ref('pagamentos').orderByChild('clienteId').equalTo(clienteId).on('value', snap=>{
+    const data = snap.val()||{};
+    const list = Object.values(data).sort((a,b)=>(b.ts||0)-(a.ts||0));
+
+    // Pendentes
+    const pendentes = list.filter(p=>p.status!=='pago');
+    const totalPend = pendentes.reduce((a,p)=>a+(p.valor||0),0);
+
+    // Contagem de pagos e comprovantes
+    const pagos = list.filter(p=>p.status==='pago').length;
+    const comps = list.filter(p=>p.receiptB64).length;
+    document.getElementById('f-pagos').textContent = pagos;
+    document.getElementById('f-comp').textContent = comps;
+
+    // Banner de pendência
+    const pendCont = document.getElementById('pend-container');
+    if(totalPend>0){
+      pendCont.innerHTML=`<div class="pend-banner">
+        <div class="pend-left">
+          <div class="pend-title">⚠️ Você possui pagamentos pendentes</div>
+          <div class="pend-sub">Entre em contato com o estúdio para regularizar.</div>
+        </div>
+        <div class="pend-val">${fmt(totalPend)}</div>
+      </div>`;
+    } else {
+      pendCont.innerHTML='';
+    }
+
+    // Seção pendentes
+    const pendSec = document.getElementById('pay-pend-section');
+    const pendList = document.getElementById('pay-pend-list');
+    if(pendentes.length){
+      pendSec.style.display='block';
+      pendList.innerHTML = pendentes.map(p=>`
+        <div class="pay-row">
+          <div class="pay-desc">${p.desc}${p.venc?`<small>Vencimento: ${p.venc}</small>`:''}</div>
+          <div class="pay-right">
+            <span class="pay-amt">${fmt(p.valor)}</span>
+            ${badgeHTML(p.status)}
+          </div>
+        </div>`).join('');
+    } else {
+      pendSec.style.display='none';
+    }
+
+    // Seção comprovantes
+    const compSec = document.getElementById('comp-section');
+    const compList = document.getElementById('comp-list');
+    const compsItems = list.filter(p=>p.receiptB64&&p.status==='pago');
+    if(compsItems.length){
+      compSec.style.display='block';
+      compList.innerHTML = compsItems.map(p=>`
+        <div class="pay-row" style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r-sm);margin-bottom:8px">
+          <div class="pay-desc">${p.desc}${p.venc?`<small>Pago ✓ — venc. ${p.venc}</small>`:''}</div>
+          <div class="pay-right">
+            <a class="receipt-btn" onclick="openLB('data:${p.receiptMime};base64,${p.receiptB64}')">📎 Ver comprovante</a>
+            ${badgeHTML(p.status)}
+          </div>
+        </div>`).join('');
+    } else {
+      compSec.style.display='none';
+    }
+  });
+}
+
+// ══════════════════════════════════════════
+// UTILS
+// ══════════════════════════════════════════
+function fmt(v){return 'R$\u00a0'+(v||0).toFixed(2).replace('.',',');}
+function today(){return new Date().toLocaleDateString('pt-BR');}
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,7);}
+function badgeHTML(s){
+  const m={entregue:'b-green',pago:'b-green','em andamento':'b-blue','revisão':'b-amber',pendente:'b-amber',atrasado:'b-red'};
+  return`<span class="badge ${m[s]||'b-blue'}">${s}</span>`;
+}
+function toast(msg,t=''){
+  const el=document.getElementById('toast');
+  el.textContent=msg;el.className='toast '+t+' on';
+  setTimeout(()=>el.className='toast',2600);
+}
+function openLB(src){document.getElementById('lbox-img').src=src;document.getElementById('lbox').classList.add('on');}
+function goTab(id,el){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
+  document.querySelectorAll('.pane').forEach(p=>p.classList.remove('on'));
+  el.classList.add('on');
+  document.getElementById('pane-'+id).classList.add('on');
+}
+
+// ══════════════════════════════════════════
+// APROVAÇÃO
+// ══════════════════════════════════════════
+function aprovar(id){
+  if(!clienteId)return;
+  const db2=firebase.database();
+  db2.ref('criativos/'+id).transaction(c=>{
+    if(!c)return c;
+    c.status='entregue';
+    c.log=[...(c.log||[]),{msg:'Arte aprovada pelo cliente',dt:today(),color:'green'}];
+    return c;
+  });
+  toast('✅ Arte aprovada! O download foi liberado.','ok');
+}
+function solicitarAlt(id){
+  const obs=prompt('Descreva o que precisa ser alterado:');
+  if(!obs)return;
+  const db2=firebase.database();
+  db2.ref('criativos/'+id).transaction(c=>{
+    if(!c)return c;
+    c.status='em andamento';
+    c.obs=(c.obs?c.obs+'\n\n':'')+`[Alteração solicitada em ${today()}]: ${obs}`;
+    c.log=[...(c.log||[]),{msg:'Alteração solicitada pelo cliente',dt:today(),color:'amber'}];
+    return c;
+  });
+  toast('✏️ Solicitação de alteração enviada!','ok');
+}
+
+// ══════════════════════════════════════════
+// PEDIDO / BRIEFING
+// ══════════════════════════════════════════
+function enviarPedido(){
+  if(!clienteId){toast('Erro: ID do cliente não encontrado.','err');return;}
+  const tit=document.getElementById('b-tit').value.trim();
+  if(!tit){toast('Informe o título do pedido.','err');return;}
+  const db2=firebase.database();
+  db2.ref('pedidos/'+uid()).set({
+    clienteId,
+    titulo:tit,
+    descricao:document.getElementById('b-desc').value,
+    referencias:document.getElementById('b-ref').value,
+    cores:document.getElementById('b-cor').value,
+    prazo:document.getElementById('b-prazo').value,
+    data:today(),
+    novo:true,
+    ts:Date.now()
+  });
+  document.getElementById('brief-form').style.display='none';
+  document.getElementById('brief-sent').style.display='block';
+}
+function novoPedido(){
+  ['b-tit','b-desc','b-ref','b-cor','b-prazo'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('brief-form').style.display='block';
+  document.getElementById('brief-sent').style.display='none';
+}
+</script>
+</body>
+</html>
